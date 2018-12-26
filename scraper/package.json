@@ -22,6 +22,10 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "puppeteer": "^1.11.0"
+    "dotenv": "^6.2.0",
+    "pg": "^7.7.1",
+    "pg-hstore": "^2.3.2",
+    "puppeteer": "^1.11.0",
+    "sequelize": "^4.42.0"
   }
 }

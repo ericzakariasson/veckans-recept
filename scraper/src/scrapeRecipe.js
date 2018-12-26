@@ -91,7 +91,7 @@ const scrapeInstructions = $ => {
   return instructions;
 };
 
-const scrapeRecipe = html => {
+const scrapeRecipe = (html, provider) => {
   const $ = cheerio.load(html);
   const metaTag = (value, key = 'name') => scrapeMetaTag($, value, key);
 
@@ -132,9 +132,10 @@ const scrapeRecipe = html => {
   };
 
   const recipe = {
+    providerId,
+    provider,
     title,
     description,
-    providerId,
     difficulty,
     time,
     portions,
