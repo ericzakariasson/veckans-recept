@@ -1,0 +1,27 @@
+{
+  "name": "recipe-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "nodemon": "^1.18.9",
+    "prettier": "^1.15.3"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "puppeteer": "^1.11.0"
+  }
+}
