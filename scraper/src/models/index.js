@@ -6,10 +6,10 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
 });
 
 const models = {
-  Recipe: sequelize.import('./Recipe'),
-  // Ingredient: sequelize.import('./Ingredient'),
+  Unit: sequelize.import('./Unit'),
+  Ingredient: sequelize.import('./Ingredient'),
+  Recipe: sequelize.import('./Recipe')
   // Instruction: sequelize.import('./Instruction')
-  Unit: sequelize.import('./Unit')
   // Tag: sequelize.import('./Tag'),
   // Score: sequelize.import('./Score')
 };

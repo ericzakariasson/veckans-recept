@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     providerId: DataTypes.STRING,
     provider: DataTypes.STRING,
     title: DataTypes.STRING,
-    descirption: DataTypes.TEXT,
+    description: DataTypes.TEXT,
     difficulty: DataTypes.STRING,
     time: DataTypes.STRING,
     portions: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Recipe.associate = models => {
-    // Recipe.hasMany(models.Ingredient);
+    Recipe.hasMany(models.Ingredient, { foreignKey: 'id', as: 'ingredients' });
     // Recipe.hasMany(models.Instruction);
     // Recipe.hasMany(models.Tag);
     // Recipe.hasOne(models.Score);

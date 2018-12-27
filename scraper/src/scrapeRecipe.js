@@ -1,4 +1,5 @@
 const cheerio = require('cheerio');
+const { toReadableFraction } = require('readable-fractions');
 const { calculateScore, decimalToFraction } = require('./helpers');
 const { models } = require('./models');
 
@@ -79,35 +80,44 @@ const scrapeTags = $ => {
   return tags;
 };
 
-const scrapeIngredients = async $ => {
+const calcAmountPerPortion = (amount, portions) => Math.round(parseFloat(amount / portions) * 100) / 100;
+
+const scrapeIngredients = async ($, portions) => {
   const ingredients = [];
+
   await $('li.ingredients__list__item').each(async function _() {
     if ($(this).find('span.ingredient').length) {
       const ingredient = $(this).find('span.ingredient');
       const amount = parseFloat(ingredient.attr('data-amount'));
       const unit = ingredient.attr('data-type');
 
-      const amountString = decimalToFraction(amount).display;
+      const amountPerPortion = calcAmountPerPortion(amount, portions);
+
+      const amountString = toReadableFraction(amount, true);
 
       const item = ingredient
         .text()
         .trim()
         .replace(amountString, '')
-        .replace(unit, '');
+        .replace(unit, '')
+        .trim();
 
-      ingredients.push({ amount, unit, item, raw: ingredient.text().trim() });
+      ingredients.push({ amount, amountPerPortion, unit, item, raw: ingredient.text().trim() });
+      return;
     }
 
     const ingredient = $(this)
       .text()
       .trim();
 
-    const { amount, matches } = ingredientAmount(
-      $(this)
-        .find('span')
-        .text()
-        .trim()
-    );
+    const amountSpan = $(this)
+      .find('span')
+      .text()
+      .trim();
+
+    const { amount, matches } = ingredientAmount(amountSpan);
+
+    const amountPerPortion = calcAmountPerPortion(amount, portions);
 
     const unit = await ingredientUnit(ingredient);
 
@@ -121,11 +131,7 @@ const scrapeIngredients = async $ => {
       .filter(word => !wordsToRemove.includes(word))
       .join(' ');
 
-    console.log('amount', amount);
-    console.log('unit', unit);
-    console.log('item', item);
-
-    ingredients.push({ amount, unit, item, raw: ingredient });
+    ingredients.push({ amount, amountPerPortion, unit, item, raw: ingredient });
   });
 
   return ingredients;
@@ -145,7 +151,7 @@ const scrapeInstructions = $ => {
   return instructions;
 };
 
-const scrapeRecipe = (html, provider) => {
+const scrapeRecipe = async (html, provider) => {
   const $ = cheerio.load(html);
   const metaTag = (value, key = 'name') => scrapeMetaTag($, value, key);
 
@@ -155,11 +161,13 @@ const scrapeRecipe = (html, provider) => {
   const difficulty = metaTag('Svårighetsgrad');
   const time = metaTag('Tillagningstid');
   const portions = scrapePortions($);
-  const ingredients = scrapeIngredients($);
+  const ingredients = await scrapeIngredients($, portions);
   const ingredientNames = metaTag('ingredients').split(',');
   const numberOfIngredients = ingredients.length;
   const instructions = scrapeInstructions($);
   const tags = scrapeTags($);
+
+  console.log(ingredients);
 
   const published = metaTagsExists($, 'Publicerad')
     ? metaTag('Publicerad')
@@ -170,9 +178,10 @@ const scrapeRecipe = (html, provider) => {
 
   const type = metaTag('Typ av recept');
 
-  const image = {
-    url: metaTag('ImageUrl', 'property')
-  };
+  const image = $('.hero__image__background')
+    .attr('style')
+    .split("'")[1]
+    .substr(2);
 
   const votes = parseInt(metaTag('NumberOfVotes'), 10);
   const averageScore = parseFloat(metaTag('AverageRating').replace(',', '.'));

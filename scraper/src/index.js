@@ -6,11 +6,10 @@ const puppeteer = require('puppeteer');
 const scrapeRecipe = require('./scrapeRecipe');
 
 const { models, sequelize } = require('./models');
-const { UNITS } = require('./constants');
 const { msToTime } = require('./helpers');
 
-const BATCH_SIZE = 10;
-const STOP_AT_PAGE = 10;
+const BATCH_SIZE = 1;
+const STOP_AT_PAGE = 1;
 const PROVIDER = 'ICA';
 
 async function asyncForEach(array, callback) {
@@ -80,6 +79,10 @@ const getRecipe = async (page, url) => {
   // await page.waitForNavigation({ waitUntil: 'networkidle0' });
   const html = await page.content();
   const recipe = await scrapeRecipe(html, PROVIDER);
+  const created = await models.Recipe.create(recipe);
+
+  console.log('created', created);
+
   return recipe;
 };
 
@@ -110,8 +113,7 @@ const scrape = async () => {
   // await fs.writeFileSync('recipes.json', JSON.stringify(recipes));
 };
 
-sequelize.sync().then(async () => {
-  await models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true });
+sequelize.sync({ force: true }).then(async () => {
   console.log(`Database connection to ${process.env.DB_HOST} established`);
 
   console.log('Start scraping');

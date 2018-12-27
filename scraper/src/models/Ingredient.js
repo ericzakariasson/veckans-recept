@@ -6,7 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     amount: DataTypes.FLOAT,
-    amountForRecipe: DataTypes.FLOAT
+    amountPerPortion: DataTypes.FLOAT,
+    item: DataTypes.STRING,
+    raw: DataTypes.STRING
   });
 
   Ingredient.associate = models => {

@@ -35,6 +35,8 @@ module.exports.calculateScore = (votes, averageScore) => {
   return score;
 };
 
+const padZero = num => (num.toString().length < 2 ? `0${num}` : num);
+
 module.exports.msToTime = s => {
   const ms = s % 1000;
   s = (s - ms) / 1000;
@@ -42,6 +44,5 @@ module.exports.msToTime = s => {
   s = (s - secs) / 60;
   const mins = s % 60;
   const hrs = (s - mins) / 60;
-
-  return `${hrs}:${mins}:${secs}.${ms}`;
+  return `${padZero(hrs)}:${padZero(mins)}:${padZero(secs)}`;
 };
