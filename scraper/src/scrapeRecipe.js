@@ -1,7 +1,55 @@
 const cheerio = require('cheerio');
 const { calculateScore, decimalToFraction } = require('./helpers');
+const { models } = require('./models');
 
 const YEAR = 'år';
+
+const AMOUNT_REGEX = /([0-9]+[,.]?[0-9]*)([\d+]?[\/][0-9]+[,.]?[0-9]*)*/g;
+
+const ingredientAmount = text => {
+  if (typeof text !== 'string') {
+    throw Error('Ingredient not text');
+  }
+
+  const matches = text.match(AMOUNT_REGEX);
+
+  const amounts = matches.map(match => {
+    if (match.includes('/')) {
+      const [top, bottom] = match.split('/');
+
+      const value = parseFloat(top / bottom);
+
+      return {
+        value
+      };
+    }
+
+    if (match.match(/[,.]/g)) {
+      const value = parseFloat(match.replace(',', '.'));
+      return {
+        value
+      };
+    }
+
+    return {
+      value: parseInt(match, 10)
+    };
+  });
+
+  const amount = amounts.reduce((total, num) => total + num.value, 0);
+  return { amount, matches };
+};
+
+const ingredientUnit = async text => {
+  const units = await models.Unit.findAll();
+
+  units.forEach(unit => {
+    const regex = new RegExp(`${unit.short}|${unit.name}`, 'g');
+
+    const match = text.match(regex)[0];
+    return match;
+  });
+};
 
 const metaTagsExists = ($, value, key) => $(`meta[${key}="${value}"]`).length > 0;
 
@@ -31,9 +79,9 @@ const scrapeTags = $ => {
   return tags;
 };
 
-const scrapeIngredients = $ => {
+const scrapeIngredients = async $ => {
   const ingredients = [];
-  $('li.ingredients__list__item').each(function _() {
+  await $('li.ingredients__list__item').each(async function _() {
     if ($(this).find('span.ingredient').length) {
       const ingredient = $(this).find('span.ingredient');
       const amount = parseFloat(ingredient.attr('data-amount'));
@@ -54,22 +102,28 @@ const scrapeIngredients = $ => {
       .text()
       .trim();
 
-    const amount = parseFloat(
+    const { amount, matches } = ingredientAmount(
       $(this)
         .find('span')
         .text()
+        .trim()
     );
 
-    const amountString = decimalToFraction(amount).display;
+    const unit = await ingredientUnit(ingredient);
 
-    const ingredientTextParts = ingredient
-      .replace(amountString, '')
-      .trim()
-      .split(' ');
+    const wordsToRemove = [];
 
-    const unit = ingredientTextParts.length >= 3 ? ingredientTextParts[0] : '';
+    wordsToRemove.concat(matches);
+    wordsToRemove.concat(unit);
 
-    const item = ingredientTextParts.filter(word => word !== unit).join(' ');
+    const item = ingredient
+      .split(' ')
+      .filter(word => !wordsToRemove.includes(word))
+      .join(' ');
+
+    console.log('amount', amount);
+    console.log('unit', unit);
+    console.log('item', item);
 
     ingredients.push({ amount, unit, item, raw: ingredient });
   });

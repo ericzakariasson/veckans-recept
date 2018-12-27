@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Recipe.associate = models => {
-    Recipe.hasMany(models.Ingredient);
-    Recipe.hasMany(models.Instruction);
-    Recipe.hasMany(models.Tag);
-    Recipe.hasOne(models.Score);
+    // Recipe.hasMany(models.Ingredient);
+    // Recipe.hasMany(models.Instruction);
+    // Recipe.hasMany(models.Tag);
+    // Recipe.hasOne(models.Score);
   };
 
   return Recipe;

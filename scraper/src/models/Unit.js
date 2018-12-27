@@ -3,13 +3,23 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
+      unique: true
     },
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      unique: true
+    },
+    short: {
+      type: DataTypes.STRING,
+      unique: true
+    },
+    qty: DataTypes.FLOAT,
+    type: DataTypes.STRING
   });
 
   Unit.associate = models => {
-    Unit.belongsToMany(models.Ingredient);
+    // Unit.belongsToMany(models.Ingredient);
   };
 
   return Unit;

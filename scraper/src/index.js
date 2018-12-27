@@ -6,6 +6,8 @@ const puppeteer = require('puppeteer');
 const scrapeRecipe = require('./scrapeRecipe');
 
 const { models, sequelize } = require('./models');
+const { UNITS } = require('./constants');
+const { msToTime } = require('./helpers');
 
 const BATCH_SIZE = 10;
 const STOP_AT_PAGE = 10;
@@ -84,7 +86,7 @@ const getRecipe = async (page, url) => {
 const numberOfPages = parseInt(STOP_AT_PAGE / BATCH_SIZE, 10);
 const pages = [...Array(numberOfPages)].map((_, i) => i + 1);
 
-(async () => {
+const scrape = async () => {
   let recipes = [];
   let urls = [];
   const browser = await puppeteer.launch();
@@ -106,8 +108,16 @@ const pages = [...Array(numberOfPages)].map((_, i) => i + 1);
   // console.log(JSON.stringify(recipes, null, 4));
   await browser.close();
   // await fs.writeFileSync('recipes.json', JSON.stringify(recipes));
-})();
+};
 
-// sequelize.sync().then(() => {
-//   console.log(`Database connection to ${process.env.DB_HOST} established`);
-// });
+sequelize.sync().then(async () => {
+  await models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true });
+  console.log(`Database connection to ${process.env.DB_HOST} established`);
+
+  console.log('Start scraping');
+  const start = Date.now();
+  await scrape();
+  const end = Date.now();
+
+  console.log(`Scraping done, took ${msToTime(end - start)}`);
+});
