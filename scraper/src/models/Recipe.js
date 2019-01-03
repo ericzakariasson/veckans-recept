@@ -7,10 +7,19 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    providerId: DataTypes.STRING,
-    provider: DataTypes.STRING,
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
+    providerId: {
+      type: DataTypes.STRING
+    },
+    provider: {
+      type: DataTypes.STRING
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT
+    },
     difficulty: DataTypes.STRING,
     time: DataTypes.STRING,
     portions: DataTypes.INTEGER,
@@ -20,16 +29,24 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Recipe.associate = models => {
-    Recipe.hasMany(models.Ingredient, { foreignKey: 'recipeId', as: 'ingredients' });
-    Recipe.belongsToMany(models.Tag, { through: 'recipe_tag' });
-    // Recipe.hasMany(models.Instruction);
-    // Recipe.hasOne(models.Score);
+    Recipe.hasMany(models.Ingredient, { as: 'ingredients' });
+    Recipe.hasMany(models.Instruction, { as: 'instructions' });
+    Recipe.belongsToMany(models.Tag, {
+      through: {
+        model: 'recipe_tag',
+        as: 'recipes',
+        unique: false
+      }
+    });
+    Recipe.hasOne(models.Score);
   };
 
   Recipe.insert = async recipeData => {
     const Ingredient = sequelize.models.ingredient;
     const Unit = sequelize.models.unit;
     const Tag = sequelize.models.tag;
+    const Instruction = sequelize.models.instruction;
+    const Score = sequelize.models.score;
 
     const recipe = await Recipe.create(recipeData, {
       include: [
@@ -43,8 +60,14 @@ module.exports = (sequelize, DataTypes) => {
           ]
         },
         {
-          model: Tag,
-          as: 'tags'
+          model: Instruction,
+          as: 'instructions'
+        },
+        {
+          model: Tag
+        },
+        {
+          model: Score
         }
       ]
     });

@@ -12,7 +12,13 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Tag.associate = models => {
-    Tag.belongsToMany(models.Recipe, { through: 'recipe_tag' });
+    Tag.belongsToMany(models.Recipe, {
+      through: {
+        model: 'recipe_tag',
+        as: 'tags',
+        unique: false
+      }
+    });
   };
 
   return Tag;

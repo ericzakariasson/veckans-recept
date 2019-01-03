@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    recipeId: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
     amount: DataTypes.FLOAT,
     amountPerPortion: DataTypes.FLOAT,
     item: {

@@ -1,7 +1,6 @@
 const cheerio = require('cheerio');
 const { toReadableFraction } = require('readable-fractions');
-const { calculateScore, decimalToFraction } = require('./helpers');
-const { models } = require('./models');
+const { calculateScore } = require('./helpers');
 const { PROVIDER } = require('./constants');
 
 const YEAR = 'år';
@@ -157,15 +156,16 @@ const scrapeIngredients = ($, portions, units) => {
 };
 
 const scrapeInstructions = $ => {
-  const instructions = {};
+  const instructions = [];
   $('div.cooking-step').each(function _(i) {
     const step = i;
-    const instruction = $(this)
+    const text = $(this)
       .find('.cooking-step__content__instruction')
       .text()
       .trim();
 
-    instructions[step] = instruction;
+    const instruction = { step, text };
+    instructions.push(instruction);
   });
   return instructions;
 };

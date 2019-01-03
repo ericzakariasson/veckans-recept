@@ -10,9 +10,9 @@ const models = {
   Unit: sequelize.import('./Unit'),
   Ingredient: sequelize.import('./Ingredient'),
   Recipe: sequelize.import('./Recipe'),
-  Tag: sequelize.import('./Tag')
-  // Instruction: sequelize.import('./Instruction')
-  // Score: sequelize.import('./Score')
+  Tag: sequelize.import('./Tag'),
+  Instruction: sequelize.import('./Instruction'),
+  Score: sequelize.import('./Score')
 };
 
 Object.keys(models).forEach(key => {
