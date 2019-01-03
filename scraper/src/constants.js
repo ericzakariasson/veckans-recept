@@ -78,3 +78,5 @@ module.exports.UNITS = [
     type: 'WEIGHT'
   }
 ];
+
+module.exports.PROVIDER = 'ICA'

@@ -4,14 +4,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-      unique: true
+      allowNull: false
+      // unique: true
     },
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
       unique: true
     },
     short: {
       type: DataTypes.STRING,
+      allowNull: false,
       unique: true
     },
     qty: DataTypes.FLOAT,
@@ -19,7 +22,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Unit.associate = models => {
-    // Unit.belongsToMany(models.Ingredient);
+    // Unit.belongsToMany(models.Ingredient, {
+    //   through: 'ingredient_unit',
+    //   foreignKey: 'unitId',
+    //   allowNull: true
+    // });
   };
 
   return Unit;

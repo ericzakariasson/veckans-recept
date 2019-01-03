@@ -1,31 +1,17 @@
 require('dotenv').config();
+const { URL, URLSearchParams } = require('url');
 
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
-const scrapeRecipe = require('./scrapeRecipe');
+const { extractRecipe } = require('./extractRecipe');
+const { UNITS } = require('./constants');
 
 const { models, sequelize } = require('./models');
-const { msToTime } = require('./helpers');
+const { msToTime, asyncForEach, asyncConcat } = require('./helpers');
 
-const BATCH_SIZE = 1;
+const BATCH_SIZE = 10;
 const STOP_AT_PAGE = 1;
-const PROVIDER = 'ICA';
-
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
-async function asyncConcat(array, data) {
-  return new Promise(resolve => {
-    if (Array.isArray(data)) {
-      return resolve([...array, ...data]);
-    }
-    return resolve([...array, data]);
-  });
-}
 
 // const url2 = `https://www.ica.se/templates/ajaxresponse.aspx?id=12&ajaxFunction=RecipeListMdsa&start=1000&num=16&filter=Måltid:Middag`;
 
@@ -79,7 +65,7 @@ const getRecipe = async (page, url) => {
   // await page.waitForNavigation({ waitUntil: 'networkidle0' });
   const html = await page.content();
   const recipe = await scrapeRecipe(html, PROVIDER);
-  const created = await models.Recipe.create(recipe);
+  const created = await models.Recipe.add(recipe);
 
   console.log('created', created);
 
@@ -113,13 +99,54 @@ const scrape = async () => {
   // await fs.writeFileSync('recipes.json', JSON.stringify(recipes));
 };
 
-sequelize.sync({ force: true }).then(async () => {
-  console.log(`Database connection to ${process.env.DB_HOST} established`);
+const extractUrls = () => Array.from(document.querySelectorAll('article.recipe')).map(recipe => recipe.querySelector('h2 a').href);
 
-  console.log('Start scraping');
-  const start = Date.now();
-  await scrape();
-  const end = Date.now();
+const scrape2 = async () => {
+  const units = await models.Unit.findAll({ raw: true });
 
-  console.log(`Scraping done, took ${msToTime(end - start)}`);
-});
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  const url = baseUrl(0);
+
+  await page.goto(url);
+  const recipeUrls = await page.evaluate(extractUrls);
+  await page.close();
+
+  console.log(`Scraped ${recipeUrls.length} recipe urls`);
+
+  await asyncForEach(recipeUrls, async recipeUrl => {
+    const recipePage = await browser.newPage();
+    await recipePage.goto(recipeUrl);
+    const content = await recipePage.content();
+    const recipe = await extractRecipe(content, units);
+    await recipePage.close();
+    await models.Recipe.insert(recipe).catch(err => console.error(err));
+  });
+
+  const recipes = await models.Recipe.findAll({
+    include: [
+      {
+        model: models.Ingredient,
+        as: 'ingredients',
+        include: [models.Unit]
+      }
+    ]
+  });
+  console.log(JSON.stringify(recipes, null, 4));
+};
+
+sequelize
+  .sync({ force: true })
+  .then(async () => {
+    console.log(`Database connection to ${process.env.DB_HOST} established`);
+    await models.Unit.bulkCreate(UNITS);
+
+    console.log('Start scraping');
+    const start = Date.now();
+    await scrape2();
+    const end = Date.now();
+
+    console.log(`Scraping done, took ${msToTime(end - start)}`);
+  })
+  .catch(err => console.error(err));

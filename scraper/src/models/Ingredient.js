@@ -5,14 +5,22 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
+    recipeId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
     amount: DataTypes.FLOAT,
     amountPerPortion: DataTypes.FLOAT,
-    item: DataTypes.STRING,
+    item: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     raw: DataTypes.STRING
   });
 
   Ingredient.associate = models => {
-    Ingredient.hasOne(models.Unit);
+    Ingredient.belongsTo(models.Recipe);
+    Ingredient.belongsTo(models.Unit);
   };
 
   return Ingredient;

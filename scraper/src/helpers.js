@@ -28,6 +28,10 @@ module.exports.decimalToFraction = decimal => {
 };
 
 module.exports.calculateScore = (votes, averageScore) => {
+  if (votes === 0) {
+    return null;
+  }
+
   const raw = votes ** averageScore / votes + 5 * averageScore;
   const float = parseFloat(raw.toFixed(1));
   const score = parseInt(float, 10);
@@ -45,4 +49,19 @@ module.exports.msToTime = s => {
   const mins = s % 60;
   const hrs = (s - mins) / 60;
   return `${padZero(hrs)}:${padZero(mins)}:${padZero(secs)}`;
+};
+
+module.exports.asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+};
+
+module.exports.asyncConcat = async (array, toConcat) => {
+  return new Promise(resolve => {
+    if (Array.isArray(toConcat)) {
+      return resolve([...array, ...toConcat]);
+    }
+    return resolve([...array, toConcat]);
+  });
 };
