@@ -9,9 +9,9 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
 const models = {
   Unit: sequelize.import('./Unit'),
   Ingredient: sequelize.import('./Ingredient'),
-  Recipe: sequelize.import('./Recipe')
+  Recipe: sequelize.import('./Recipe'),
+  Tag: sequelize.import('./Tag')
   // Instruction: sequelize.import('./Instruction')
-  // Tag: sequelize.import('./Tag'),
   // Score: sequelize.import('./Score')
 };
 

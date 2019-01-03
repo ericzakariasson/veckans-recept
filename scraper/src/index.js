@@ -10,7 +10,7 @@ const { UNITS } = require('./constants');
 const { models, sequelize } = require('./models');
 const { msToTime, asyncForEach, asyncConcat } = require('./helpers');
 
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 1;
 const STOP_AT_PAGE = 1;
 
 // const url2 = `https://www.ica.se/templates/ajaxresponse.aspx?id=12&ajaxFunction=RecipeListMdsa&start=1000&num=16&filter=Måltid:Middag`;
@@ -130,6 +130,10 @@ const scrape2 = async () => {
         model: models.Ingredient,
         as: 'ingredients',
         include: [models.Unit]
+      },
+      {
+        model: models.Tag,
+        as: 'tags'
       }
     ]
   });

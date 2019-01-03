@@ -21,14 +21,16 @@ module.exports = (sequelize, DataTypes) => {
 
   Recipe.associate = models => {
     Recipe.hasMany(models.Ingredient, { foreignKey: 'recipeId', as: 'ingredients' });
+    Recipe.belongsToMany(models.Tag, { through: 'recipe_tag' });
     // Recipe.hasMany(models.Instruction);
-    // Recipe.hasMany(models.Tag);
     // Recipe.hasOne(models.Score);
   };
 
   Recipe.insert = async recipeData => {
     const Ingredient = sequelize.models.ingredient;
     const Unit = sequelize.models.unit;
+    const Tag = sequelize.models.tag;
+
     const recipe = await Recipe.create(recipeData, {
       include: [
         {
@@ -39,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
               model: Unit
             }
           ]
+        },
+        {
+          model: Tag,
+          as: 'tags'
         }
       ]
     });

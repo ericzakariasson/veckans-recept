@@ -93,7 +93,7 @@ const scrapeTags = $ => {
       tags.push(tag);
     });
 
-  return tags;
+  return tags.map(tag => ({ name: tag }));
 };
 
 const calcAmountPerPortion = (amount, portions) => Math.round(parseFloat(amount / portions) * 100) / 100;

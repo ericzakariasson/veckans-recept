@@ -5,11 +5,14 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   });
 
   Tag.associate = models => {
-    Tag.belongsToMany(models.Recipe);
+    Tag.belongsToMany(models.Recipe, { through: 'recipe_tag' });
   };
 
   return Tag;
