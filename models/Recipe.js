@@ -1,7 +1,11 @@
-const { asyncForEach } = require('../helpers');
+const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+};
 
 module.exports = (sequelize, DataTypes) => {
-  const Recipe = sequelize.define('recipe', {
+  const Recipe = sequelize.define("recipe", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -33,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Recipe.associate = m => {
-    Recipe.hasMany(m.Instruction, { as: 'instructions' });
+    Recipe.hasMany(m.Instruction);
     Recipe.belongsToMany(m.Tag, {
       through: m.RecipeTag
     });
@@ -54,13 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     recipeData.url = url;
 
     const recipe = await Recipe.create(recipeData, {
-      include: [
-        Score,
-        {
-          model: Instruction,
-          as: 'instructions'
-        }
-      ]
+      include: [Score, Instruction]
     });
 
     await asyncForEach(data.ingredientSections, async sectionData => {

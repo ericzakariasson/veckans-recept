@@ -1,12 +1,13 @@
 require('dotenv').config();
 
 const { UNITS } = require('./constants');
-const { models, sequelize } = require('./models');
+const { models, sequelize } = require('../../models');
 
 const syncUnits = () => {
-  sequelize.sync()
+  sequelize
+    .sync()
     .then(() => models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true }))
-    .catch(err => console.error(err))
+    .catch(err => console.error(err));
 };
 
 syncUnits();
