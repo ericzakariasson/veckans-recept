@@ -9,7 +9,9 @@ const { UNITS } = require('./constants');
 const { models, sequelize } = require('./models');
 const { msToTime, asyncForEach } = require('./helpers');
 
-let BATCH_SIZE = 2 ** 13;
+const isProduction = process.env.NODE_ENV === 'production';
+
+let BATCH_SIZE = isProduction ? process.env.BATCH_SIZE : 10;
 let pageNumber = 0;
 
 // https://www.ica.se/templates/ajaxresponse.aspx?id=12&ajaxFunction=RecipeListMdsa&start=1000&num=16&filter=Måltid:Middag
@@ -54,6 +56,7 @@ const scrape = async () => {
     }
 
     BATCH_SIZE /= 2;
+    console.log('Batch size set to', BATCH_SIZE);
     return scrape();
   }
 
@@ -66,9 +69,9 @@ const scrape = async () => {
     const recipePage = await browser.newPage();
     await recipePage.goto(recipeUrl);
     const content = await recipePage.content();
-    const recipe = await extractRecipe(content, units);
+    const data = await extractRecipe(content, units);
     await recipePage.close();
-    await models.Recipe.insert(recipe).catch(err => console.error(err));
+    await models.Recipe.insert(data, recipeUrl).catch(err => console.error(err));
   });
 
   await browser.close();
@@ -82,7 +85,7 @@ sequelize
   .sync({ force: true })
   .then(async () => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);
-    await models.Unit.bulkCreate(UNITS);
+    await models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true });
 
     console.log('Start scraping');
     const start = Date.now();

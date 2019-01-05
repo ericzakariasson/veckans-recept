@@ -10,6 +10,9 @@ const models = {
   Unit: sequelize.import('./Unit'),
   Ingredient: sequelize.import('./Ingredient'),
   Recipe: sequelize.import('./Recipe'),
+  RecipeTag: sequelize.import('./RecipeTag'),
+  RecipeSection: sequelize.import('./RecipeSection'),
+  RecipeSectionIngredient: sequelize.import('./RecipeSectionIngredient'),
   Tag: sequelize.import('./Tag'),
   Instruction: sequelize.import('./Instruction'),
   Score: sequelize.import('./Score')

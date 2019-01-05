@@ -79,7 +79,10 @@ const scrapeMetaTag = ($, value, key = 'name') => {
   return undefined;
 };
 
-const scrapePortions = $ => parseInt($('div.servings-picker').attr('data-current-portions'), 10);
+const scrapePortions = $ => {
+  const portions = parseInt($('div.servings-picker').attr('data-current-portions'), 10);
+  return Number.isNaN(portions) ? null : portions;
+};
 
 const scrapeTags = $ => {
   const tags = [];
@@ -95,61 +98,89 @@ const scrapeTags = $ => {
   return tags.map(tag => ({ name: tag }));
 };
 
-const calcAmountPerPortion = (amount, portions) => Math.round(parseFloat(amount / portions) * 100) / 100;
+const calcAmountPerPortion = (amount, portions) => {
+  if (!portions) {
+    return null;
+  }
 
-const scrapeIngredients = ($, portions, units) => {
-  const ingredients = [];
+  return Math.round(parseFloat(amount / portions) * 100) / 100;
+};
 
-  $('li.ingredients__list__item').each(function _() {
-    if ($(this).find('span.ingredient').length) {
-      const ingredient = $(this).find('span.ingredient');
-      const amount = parseFloat(ingredient.attr('data-amount'));
-      const unit = ingredient.attr('data-type');
-
-      const amountPerPortion = calcAmountPerPortion(amount, portions);
-
-      const amountString = toReadableFraction(amount, true);
-
-      const item = ingredient
-        .text()
-        .trim()
-        .replace(amountString, '')
-        .replace(unit, '')
-        .trim();
-
-      ingredients.push({ amount, amountPerPortion, unit, item, raw: ingredient.text().trim() });
-      return;
-    }
-
-    const ingredient = $(this)
-      .text()
-      .trim();
-
-    const amountSpan = $(this)
-      .find('span')
-      .text()
-      .trim();
-
-    const { amount, matches: amountMatches } = ingredientAmount(amountSpan);
+function extractIngredient($, portions, units, el) {
+  if ($(el).find('span.ingredient').length) {
+    const ingredient = $(el).find('span.ingredient');
+    const amount = parseFloat(ingredient.attr('data-amount'));
+    const unit = ingredient.attr('data-type');
 
     const amountPerPortion = calcAmountPerPortion(amount, portions);
 
-    const { unit, match: unitMatch } = ingredientUnit(ingredient, units);
+    const amountString = toReadableFraction(amount, true);
 
-    const unitId = unit !== null ? unit.id : null;
-
-    const wordsToRemove = [...amountMatches, unitMatch]
-      .filter(word => word !== null)
-      .map(word => word.trim())
-      .filter(word => word !== ' ');
-
-    const item = ingredient
-      .split(' ')
-      .filter(word => !wordsToRemove.includes(word))
-      .join(' ')
+    const name = ingredient
+      .text()
+      .trim()
+      .replace(amountString, '')
+      .replace(unit, '')
       .trim();
 
-    ingredients.push({ amount, amountPerPortion, unitId, item, raw: ingredient });
+    return { amount, amountPerPortion, unit, name };
+  }
+
+  const ingredient = $(el)
+    .text()
+    .trim();
+
+  const amountSpan = $(el)
+    .find('span')
+    .text()
+    .trim();
+
+  const { amount, matches: amountMatches } = ingredientAmount(amountSpan);
+
+  const amountPerPortion = calcAmountPerPortion(amount, portions);
+
+  const { unit, match: unitMatch } = ingredientUnit(ingredient, units);
+
+  const unitId = unit !== null ? unit.id : null;
+
+  const wordsToRemove = [...amountMatches, unitMatch]
+    .filter(word => word !== null)
+    .map(word => word.trim())
+    .filter(word => word !== ' ');
+
+  const name = ingredient
+    .split(' ')
+    .filter(word => !wordsToRemove.includes(word))
+    .join(' ')
+    .trim();
+
+  return { amount, amountPerPortion, unitId, name };
+}
+
+const scrapeIngredients = ($, portions, units) => {
+  const $extractIngredient = extractIngredient.bind(null, $, portions, units);
+
+  const ingredients = Array.from($('ul.ingredients__list')).map((list, i) => {
+    let partName = null;
+
+    const prevIsStrong = $(list)
+      .prev()
+      .is('strong');
+
+    if (prevIsStrong) {
+      partName = $(list)
+        .prev('strong')
+        .text()
+        .trim();
+    }
+
+    const partIngredients = Array.from($(list).find('li.ingredients__list__item')).map(ingredientListItem => $extractIngredient(ingredientListItem));
+
+    return {
+      order: i,
+      name: partName,
+      ingredients: partIngredients
+    };
   });
 
   return ingredients;
@@ -180,10 +211,10 @@ const extractRecipe = (html, units) => {
   const difficulty = metaTag('Svårighetsgrad');
   const time = metaTag('Tillagningstid');
   const portions = scrapePortions($);
-  const ingredients = scrapeIngredients($, portions, units);
-  // console.log('ingredients', ingredients);
-  const ingredientNames = metaTag('ingredients').split(',');
-  const numberOfIngredients = ingredients.length;
+  const ingredientSections = scrapeIngredients($, portions, units);
+  // const ingredientNames = metaTag('ingredients').split(',');
+
+  const numberOfIngredients = ingredientSections.reduce((total, section) => total + section.ingredients.length, 0);
   const instructions = scrapeInstructions($);
   const tags = scrapeTags($);
 
@@ -214,27 +245,28 @@ const extractRecipe = (html, units) => {
     votes
   };
 
-  const recipe = {
-    providerId,
-    provider: PROVIDER,
-    title,
-    description,
-    difficulty,
-    time,
-    portions,
-    ingredients,
-    ingredientNames,
-    numberOfIngredients,
-    instructions,
-    tags,
-    type,
-    published,
-    image,
-    score
+  const data = {
+    recipe: {
+      providerId,
+      provider: PROVIDER,
+      title,
+      description,
+      difficulty,
+      time,
+      portions,
+      numberOfIngredients,
+      type,
+      published,
+      image,
+      score,
+      instructions
+    },
+    ingredientSections,
+    tags
   };
 
-  console.log('Scraped recipe', recipe.title);
-  return recipe;
+  console.log('Scraped recipe', data.recipe.title);
+  return data;
 };
 
 module.exports = { extractRecipe };

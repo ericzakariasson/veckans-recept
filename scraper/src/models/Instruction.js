@@ -1,10 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   const Instruction = sequelize.define('instruction', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
     step: {
       type: DataTypes.INTEGER,
       allowNull: false
