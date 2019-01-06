@@ -26,9 +26,13 @@ Do `npm install` for the following directories:
 Once you have installed all packages, fill in databse connection info in the `.env`-file located in both `server/` and `scraper/`.
 
 `DB_HOST` - eg. `123.45.678.910`
+
 `DB_PORT` - default `5432`
+
 `DB_DATABASE` - name of the database
+
 `DB_USER` - User you have created
+
 `DB_PASSWORD` - Password for user
 
 In `scraper/` you have to set how many recipes to scraped at a time. You set this value in the `BATCH_SIZE` field in the `scraped/.env`-file.
