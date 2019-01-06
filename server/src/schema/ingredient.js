@@ -6,10 +6,14 @@ module.exports = gql`
   }
 
   type Ingredient {
-    name: String!
+    item: Item!
     amount: Float!
     amountPerPortion: Float
-    unit: Unit!
+    unit: Unit
+  }
+
+  type Item {
+    name: String!
   }
 
   type Unit {

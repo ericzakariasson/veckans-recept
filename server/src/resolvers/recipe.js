@@ -6,25 +6,32 @@ module.exports = {
   },
   Recipe: {
     sections: async (recipe, args, { models }) => {
-      return models.RecipeSection.findAll({
+      return models.Section.findAll({
         where: {
           recipeId: recipe.id
-        }
+        },
+        order: [['order', 'ASC']]
+      });
+    },
+    tags: async (recipe, args, { models }) => {
+      return models.Tag.findAll({
+        attributes: ['name'],
+        include: [
+          {
+            model: models.Recipe,
+            where: { id: recipe.id }
+          }
+        ]
       });
     }
   },
   Section: {
     ingredients: async (section, args, { models }) => {
-      return models.RecipeSectionIngredient.findAll({
+      return models.Ingredient.findAll({
         where: {
-          recipeSectionId: section.id
-        },
-        include: [
-          {
-            model: models.Ingredient
-          }
-        ]
-      }).map(el => el.get({ plain: true }));
+          sectionId: section.id
+        }
+      });
     }
   }
 };
