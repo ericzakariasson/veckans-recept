@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   extend type Query {
     recipe(id: ID!): Recipe
+    recipes: [Recipe!]
   }
 
   type Recipe {

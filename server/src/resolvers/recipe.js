@@ -2,6 +2,9 @@ module.exports = {
   Query: {
     recipe: async (_, { id }, { models }) => {
       return models.Recipe.findByPk(id);
+    },
+    recipes: async (_, {}, { models }) => {
+      return models.Recipe.findAll();
     }
   },
   Recipe: {
@@ -22,6 +25,14 @@ module.exports = {
             where: { id: recipe.id }
           }
         ]
+      });
+    },
+    instructions: async (recipe, args, { models }) => {
+      return models.Instruction.findAll({
+        where: {
+          recipeId: recipe.id
+        },
+        order: [['step', 'ASC']]
       });
     }
   },
