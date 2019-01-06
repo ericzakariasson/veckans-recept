@@ -1,15 +1,17 @@
+const { modelOptions } = require('./index');
+
 module.exports = (sequelize, DataTypes) => {
-  const Ingredient = sequelize.define('ingredient', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
-  });
+  const Ingredient = sequelize.define(
+    'ingredient',
+    {
+      amount: DataTypes.FLOAT,
+      amountPerPortion: DataTypes.FLOAT
+    },
+    modelOptions
+  );
 
   Ingredient.associate = models => {
-    Ingredient.belongsToMany(models.RecipeSection, {
-      through: models.RecipeSectionIngredient
-    });
+    Ingredient.belongsTo(models.Unit);
   };
 
   return Ingredient;

@@ -2,66 +2,28 @@ require('dotenv').config();
 const { ApolloServer, gql } = require('apollo-server');
 const { sequelize, models } = require('./models');
 
-const typeDefs = gql`
-  type Recipe {
-    id: ID!
-    providerId: String
-    provider: String
-    url: String
-    title: String!
-    description: String
-    difficulty: String
-    time: String
-    portions: Int
-    numberOfIngredients: Int
-    type: String
-    image: String
-    sections: [Section]
-    instructions: [Instruction]
-    tags: [Tag]
-    score: Score
-  }
+const schema = require('./schema');
+const resolvers = require('./resolvers');
 
-  type Section {
-    name: String!
-    order: Int
-    ingredients: [Ingredient]!
-  }
+const server = new ApolloServer({
+  typeDefs: schema,
+  resolvers,
+  playground: true,
+  context: () => ({ models })
+});
 
-  type Ingredient {
-    name: String!
-    amount: Float!
-    amountPerPortion: Float
-    unit: Unit!
-  }
+const PORT = process.env.PORT || 4000;
 
-  type Unit {
-    name: String!
-    short: String!
-    qty: Float
-    type: String
-  }
+sequelize
+  .sync()
+  .then(() => {
+    console.log(`Database connection to ${process.env.DB_HOST} established`);
+    server.listen(PORT, () => console.log(`Apollo Server running on http://localhost:${PORT}/graphql`));
 
-  type Instruction {
-    step: Int!
-    text: String!
-  }
-
-  type Score {
-    score: Int
-    averageScore: Int!
-    votes: Int!
-  }
-
-  type Tag {
-    name: String!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    recipe: async (_, { id }, { models }) => {
-      return await models.recipe.findById(id);
-    }
-  }
-};
+    // models.Recipe.findByPk('1', {
+    //   include: [
+    //     models
+    //   ]
+    // }).then(r => console.log(JSON.stringify(r, null, 4)));
+  })
+  .catch(err => console.error(err));

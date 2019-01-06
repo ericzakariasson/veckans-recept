@@ -1,8 +1,8 @@
 const { modelOptions } = require('./index');
 
 module.exports = (sequelize, DataTypes) => {
-  const Tag = sequelize.define(
-    'tag',
+  const Item = sequelize.define(
+    'item',
     {
       name: {
         type: DataTypes.STRING,
@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     modelOptions
   );
 
-  Tag.associate = models => {
-    Tag.belongsToMany(models.Recipe, {
-      through: models.RecipeTag
+  Item.associate = models => {
+    Item.belongsToMany(models.Section, {
+      through: models.Ingredient
     });
   };
 
-  return Tag;
+  return Item;
 };
