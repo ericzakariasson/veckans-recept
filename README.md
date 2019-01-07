@@ -65,6 +65,6 @@ You should now be able to use the app
 ## Todo
 
 - Build frontend
-- Add more units like 'burk' and 'st'
+- Add units 'burk', 'st', 'förp'
 - Parse time in minutes as integer
 - Store difficulty as integer

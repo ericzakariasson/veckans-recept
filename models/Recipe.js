@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT
       },
       difficulty: DataTypes.STRING,
-      time: DataTypes.STRING,
+      time: DataTypes.INTEGER,
       portions: DataTypes.INTEGER,
       numberOfIngredients: DataTypes.INTEGER,
       type: DataTypes.STRING,
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     const exists = await Recipe.findOne({ where: { url } });
 
     if (exists) {
-      console.log('Recipe already scraped');
+      console.log(`Recipe '${data.recipe.title}' already scraped`);
       return;
     }
 

@@ -4,7 +4,6 @@ const { calculateScore } = require('./helpers');
 const { PROVIDER } = require('./constants');
 
 const YEAR = 'år';
-
 const AMOUNT_REGEX = /([0-9]+[,.]?[0-9]*)([\d+]?[\/][0-9]+[,.]?[0-9]*)*/g;
 
 const ingredientAmount = text => {
@@ -176,6 +175,17 @@ const scrapeIngredients = ($, portions, units) => {
 
     const partIngredients = Array.from($(list).find('li.ingredients__list__item')).map(ingredientListItem => $extractIngredient(ingredientListItem));
 
+    const map = new Map();
+
+    const uniqueIngredients = partIngredients.map(ingredient => {
+      if (!map.has(ingredient.name)) {
+        map.set(ingredient.name, true); // set any value to Map
+        return ingredient;
+      }
+    });
+
+    console.log(uniqueIngredients);
+
     return {
       order: i,
       name: partName,
@@ -201,6 +211,28 @@ const scrapeInstructions = $ => {
   return instructions;
 };
 
+const extractTime = timeString => {
+  const hourMatch = /(\d+)\s+(timmar|h)/gi.exec(timeString);
+  const minuteMatch = /(\d+)\s+min(ut)?/gi.exec(timeString);
+  const isNumber = /\d+/gi.exec(timeString);
+
+  if (!hourMatch && !minuteMatch) {
+    if (isNumber) {
+      return parseInt(isNumber[0], 10);
+    }
+    return 0;
+  }
+
+  let isHour = false;
+
+  if (hourMatch) {
+    isHour = true;
+  }
+
+  const minutes = isHour ? parseInt(parseFloat(hourMatch[1]) * 60, 10) : parseInt(minuteMatch[1], 10);
+  return minutes;
+};
+
 const extractRecipe = (html, units) => {
   const $ = cheerio.load(html);
   const metaTag = (value, key = 'name') => scrapeMetaTag($, value, key);
@@ -209,7 +241,10 @@ const extractRecipe = (html, units) => {
   const description = metaTag('description');
   const providerId = metaTag('Id');
   const difficulty = metaTag('Svårighetsgrad');
-  const time = metaTag('Tillagningstid');
+
+  const timeString = metaTag('Tillagningstid');
+  const time = extractTime(timeString);
+
   const portions = scrapePortions($);
   const ingredientSections = scrapeIngredients($, portions, units);
   // const ingredientNames = metaTag('ingredients').split(',');
