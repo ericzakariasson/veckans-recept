@@ -1,3 +1,5 @@
+const { literal } = require('sequelize');
+
 module.exports = {
   Query: {
     recipe: async (_, { id }, { models }) => {
@@ -5,6 +7,12 @@ module.exports = {
     },
     recipes: async (_, {}, { models }) => {
       return models.Recipe.findAll();
+    },
+    randomRecipes: async (_, { limit }, { models }) => {
+      return models.Recipe.findAll({
+        order: literal('random()'),
+        limit
+      });
     }
   },
   Recipe: {
