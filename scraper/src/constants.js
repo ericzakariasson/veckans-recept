@@ -76,7 +76,47 @@ module.exports.UNITS = [
     short: 'mg',
     qty: 0.001,
     type: 'WEIGHT'
+  },
+  {
+    name: 'Styck',
+    short: 'st',
+    type: 'QUANTITY'
+  },
+  {
+    name: 'Förpackning',
+    short: 'förp',
+    type: 'OTHER'
+  },
+  {
+    name: 'Burk',
+    short: 'burk',
+    type: 'OTHER'
+  },
+  {
+    name: 'Låda',
+    short: 'låda',
+    type: 'OTHER'
+  },
+  {
+    name: 'Påse',
+    short: 'påse',
+    type: 'OTHER'
+  },
+  {
+    name: 'Flaska',
+    short: 'påse',
+    type: 'OTHER'
+  },
+  {
+    name: 'Tub',
+    short: 'tub',
+    type: 'OTHER'
+  },
+  {
+    name: 'Nypa',
+    short: 'nypa',
+    type: 'VOLUME'
   }
 ];
 
-module.exports.PROVIDER = 'ICA'
+module.exports.PROVIDER = 'ICA';
