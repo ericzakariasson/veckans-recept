@@ -2,7 +2,7 @@ function gcd(a, b) {
   return b ? gcd(b, a % b) : a;
 }
 
-module.exports.decimalToFraction = decimal => {
+exports.decimalToFraction = decimal => {
   if (decimal === parseInt(decimal, 10)) {
     return {
       top: parseInt(decimal, 10),
@@ -27,7 +27,7 @@ module.exports.decimalToFraction = decimal => {
   };
 };
 
-module.exports.calculateScore = (votes, averageScore) => {
+exports.calculateScore = (votes, averageScore) => {
   if (votes === 0) {
     return null;
   }
@@ -41,23 +41,32 @@ module.exports.calculateScore = (votes, averageScore) => {
 
 const padZero = num => (num.toString().length < 2 ? `0${num}` : num);
 
-module.exports.msToTime = s => {
-  const ms = s % 1000;
-  s = (s - ms) / 1000;
-  const secs = s % 60;
-  s = (s - secs) / 60;
-  const mins = s % 60;
-  const hrs = (s - mins) / 60;
-  return `${padZero(hrs)}:${padZero(mins)}:${padZero(secs)}`;
+// https://gist.github.com/Erichain/6d2c2bf16fe01edfcffa
+
+exports.convertMS = milliseconds => {
+  let day;
+  let hour;
+  let minute;
+  let seconds;
+
+  seconds = Math.floor(milliseconds / 1000);
+  minute = Math.floor(seconds / 60);
+  seconds %= 60;
+  hour = Math.floor(minute / 60);
+  minute %= 60;
+  day = Math.floor(hour / 24);
+  hour %= 24;
+
+  return { day, hour: padZero(hour), minute: padZero(minute), seconds: padZero(seconds) };
 };
 
-module.exports.asyncForEach = async (array, callback) => {
+exports.asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
 };
 
-module.exports.asyncConcat = async (array, toConcat) => {
+exports.asyncConcat = async (array, toConcat) => {
   return new Promise(resolve => {
     if (Array.isArray(toConcat)) {
       return resolve([...array, ...toConcat]);

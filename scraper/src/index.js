@@ -7,16 +7,13 @@ const { extractRecipe } = require('./extractRecipe');
 const { UNITS } = require('./constants');
 
 const { models, sequelize } = require('./models');
-const { msToTime, asyncForEach } = require('./helpers');
+const { convertMS, asyncForEach } = require('./helpers');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-let BATCH_SIZE = isProduction ? process.env.BATCH_SIZE : 10;
-let pageNumber = 0;
-
 // https://www.ica.se/templates/ajaxresponse.aspx?id=12&ajaxFunction=RecipeListMdsa&start=1000&num=16&filter=Måltid:Middag
 
-const baseUrl = page => {
+const baseUrl = ({ pageNum, batchSize }) => {
   const date = new Date();
 
   const url = new URL('https://www.ica.se/templates/ajaxresponse.aspx');
@@ -24,8 +21,8 @@ const baseUrl = page => {
   const params = new URLSearchParams({
     id: 12,
     ajaxFunction: 'RecipeListMdsa',
-    start: page * BATCH_SIZE,
-    num: BATCH_SIZE,
+    start: pageNum * batchSize,
+    num: batchSize,
     filter: 'Måltid::Middag',
     _hour: date.getHours(),
     t: Date.now()
@@ -38,32 +35,43 @@ const baseUrl = page => {
 
 const extractUrls = () => Array.from(document.querySelectorAll('article.recipe')).map(recipe => recipe.querySelector('h2 a').href);
 
-const scrape = async () => {
+const decreaseBatchSize = batchSize => (batchSize /= 2);
+const increasePageNumber = pageNum => (pageNum += 1);
+
+const shouldStop = ({ pageNum, batchSize }) => batchSize <= 1 || (batchSize <= 1 && pageNum !== 0);
+
+const initialParams = {
+  pageNum: 0,
+  batchSize: isProduction ? process.env.BATCH_SIZE : 8
+};
+
+const scrape = async (params = initialParams) => {
+  const { batchSize, pageNum } = params;
+
   const units = await models.Unit.findAll({ raw: true });
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  const url = baseUrl(pageNumber);
+  const url = baseUrl(params);
 
   await page.goto(url);
 
-  const hasUrls = (await page.$('.recipe')) !== null;
-
-  if (!hasUrls) {
-    if (BATCH_SIZE === 1) {
-      return;
+  await page.waitForSelector('.recipe', { timeout: 4000 }).catch(err => {
+    if (shouldStop(params)) {
+      console.log('No more urls, exiting');
+      process.exit(1);
     }
 
-    BATCH_SIZE /= 2;
-    console.log('Batch size set to', BATCH_SIZE);
-    return scrape();
-  }
+    const newBatchSize = decreaseBatchSize(batchSize);
+    console.log('Batch size set to', newBatchSize);
+    return scrape({ pageNum, batchSize: newBatchSize });
+  });
 
   const recipeUrls = await page.evaluate(extractUrls);
   await page.close();
 
-  console.log(`Scraped ${recipeUrls.length} recipe urls`);
+  console.log(`Found ${recipeUrls.length} recipe urls`);
 
   await asyncForEach(recipeUrls, async recipeUrl => {
     const recipePage = await browser.newPage();
@@ -71,32 +79,42 @@ const scrape = async () => {
     const content = await recipePage.content();
     const data = await extractRecipe(content, units);
     await recipePage.close();
-    await models.Recipe.insert(data, recipeUrl).catch(err => console.error(err));
+    await models.Recipe.insert(data, recipeUrl).catch(console.error);
   });
 
   await browser.close();
   // console.log(JSON.stringify(recipes, null, 4));
 
-  pageNumber += 1;
-  await scrape();
+  const newPageNum = increasePageNumber(pageNum);
+  await scrape({ pageNum: newPageNum, batchSize });
 };
+
+const start = Date.now();
 
 sequelize
   .sync({ force: true })
   .then(async () => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);
-    await models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true });
+    const unitsExists = (await models.Unit.count()) > 0;
+
+    if (!unitsExists) {
+      await models.Unit.bulkCreate(UNITS, { ignoreDuplicates: true });
+    }
 
     console.log('Start scraping');
-    const start = Date.now();
     await scrape();
-    const end = Date.now();
 
-    console.log(`Scraping done, took ${msToTime(end - start)}`);
+    process.exit(1);
   })
-  .catch(err => console.error(err));
+  .catch(console.error);
 
 process.on('uncaughtException', () => {
   console.log('Something happened, process will exit');
   process.exit(1);
+});
+
+process.on('exit', () => {
+  const end = Date.now();
+  const { hour, minute, seconds } = convertMS(end - start);
+  console.log(`Process will exit, alive ${hour}:${minute}:${seconds}`);
 });

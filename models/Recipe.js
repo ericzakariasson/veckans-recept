@@ -102,6 +102,8 @@ module.exports = (sequelize, DataTypes) => {
 
       await RecipeTag.create({ recipeId: recipe.id, tagId: tag.id });
     });
+
+    console.log(`Stored recipe: `, recipe.title);
   };
 
   return Recipe;

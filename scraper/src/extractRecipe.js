@@ -184,12 +184,10 @@ const scrapeIngredients = ($, portions, units) => {
       }
     });
 
-    console.log(uniqueIngredients);
-
     return {
       order: i,
       name: partName,
-      ingredients: partIngredients
+      ingredients: uniqueIngredients
     };
   });
 
@@ -300,7 +298,6 @@ const extractRecipe = (html, units) => {
     tags
   };
 
-  console.log('Scraped recipe', data.recipe.title);
   return data;
 };
 
