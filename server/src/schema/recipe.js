@@ -4,7 +4,7 @@ module.exports = gql`
   extend type Query {
     recipe(id: ID!): Recipe
     recipes: [Recipe!]
-    randomRecipes(limit: Int): [Recipe!]
+    randomRecipes(limit: Int, ids: [Int]!): [Recipe]!
   }
 
   type Recipe {

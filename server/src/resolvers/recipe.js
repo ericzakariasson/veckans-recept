@@ -1,16 +1,19 @@
-const { literal } = require('sequelize');
+const { literal, Op } = require('sequelize');
 
 module.exports = {
   Query: {
     recipe: async (_, { id }, { models }) => {
       return models.Recipe.findByPk(id);
     },
-    recipes: async (_, {}, { models }) => {
+    recipes: async (_, args, { models }) => {
       return models.Recipe.findAll();
     },
-    randomRecipes: async (_, { limit }, { models }) => {
+    randomRecipes: async (_, { limit, ids }, { models }) => {
       return models.Recipe.findAll({
         order: literal('random()'),
+        where: {
+          id: { [Op.notIn]: ids }
+        },
         limit
       });
     }

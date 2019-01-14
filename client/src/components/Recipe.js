@@ -57,6 +57,7 @@ const Title = styled.h1`
   font-family: ${p => p.theme.fonts.body};
   font-weight: 600;
   margin-bottom: 10px;
+  white-space: pre;
 `
 
 const InfoList = styled.ul``
@@ -80,22 +81,7 @@ const Info = styled.li`
   }
 `
 
-const Day = styled.h2`
-  margin-right: 40px;
-  font-size: 0.9rem;
-  width: 80px;
-  text-transform: uppercase;
-  color: #666;
-  font-weight: 600;
-  letter-spacing: 1px;
-`
-
-const Buttons = styled.div`
-  margin-left: 40px;
-`
-
 const Recipe = ({
-  day,
   id,
   title,
   image,
@@ -104,7 +90,6 @@ const Recipe = ({
   numberOfIngredients,
 }) => (
   <Wrapper>
-    <Day>{day.name}</Day>
     <Card>
       <Image url={image} />
       <Content>
@@ -116,7 +101,6 @@ const Recipe = ({
         </InfoList>
       </Content>
     </Card>
-    <Buttons>Buttons</Buttons>
   </Wrapper>
 )
 
