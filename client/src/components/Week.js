@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Query } from 'react-apollo'
+import { Query, withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import Recipe from './Recipe'
@@ -8,7 +8,7 @@ import Days from './Days'
 import Bar from './Bar'
 import RecipeActions from './RecipeActions'
 
-import { WEEK_DAYS } from '../constanst'
+import { WEEK_DAYS as initialDays } from '../constanst'
 
 const RECIPES = gql`
   query RandomRecipes($limit: Int!, $ids: [Int]!) {
@@ -41,8 +41,46 @@ const Actions = styled.div`
   margin-left: 40px;
 `
 
-const Week = () => {
-  const [days, setDays] = useState(WEEK_DAYS)
+const Week = ({ client }) => {
+  const [days, setDays] = useState(initialDays)
+  const [recipes, setRecipes] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    initialFetch()
+  }, [])
+
+  const dayArray = Object.keys(days).map(day => days[day])
+  const enabledDays = dayArray.filter(day => day.enabled)
+  const enabledAndNotFrozen = enabledDays.filter(day => !day.frozen)
+
+  const defaultParams = {
+    limit: enabledDays.length,
+    ids: recipes.map(recipe => recipe.id),
+  }
+
+  async function fetchRecipes(
+    limit = defaultParams.limit,
+    ids = defaultParams.ids
+  ) {
+    const { data, networkStatus, error, loading } = await client.query({
+      query: RECIPES,
+      variables: { limit, ids },
+    })
+
+    if (error) {
+      setError(error)
+    }
+
+    return { data, loading, networkStatus }
+  }
+
+  async function initialFetch() {
+    const { data } = await fetchRecipes()
+    setRecipes(data.randomRecipes)
+    setLoading(false)
+  }
 
   function freeze(dayIndex) {
     const day = days[dayIndex]
@@ -56,102 +94,99 @@ const Week = () => {
     })
   }
 
-  function toggle(dayIndex) {
+  async function toggle(dayIndex) {
     const day = days[dayIndex]
 
-    setDays({
+    const newDays = {
       ...days,
       [day.index]: {
         ...day,
         enabled: !day.enabled,
       },
-    })
+    }
+
+    const fetchOneMore = !day.enabled
+    console.log(dayIndex)
+
+    // fetchOneMore ? await fetchOne(index) : removeRecipe(index)
+    // console.log(fetchOneMore)
+    if (fetchOneMore) {
+      const index = Object.keys(newDays)
+        .map(id => newDays[id])
+        .filter(d => d.enabled)
+        .findIndex(d => d.index === dayIndex)
+      console.log(index)
+      await insertOne(index)
+    } else {
+      const index = enabledDays.findIndex(d => d.index === dayIndex)
+      removeRecipe(index)
+    }
+
+    setDays(newDays)
   }
 
-  function refetchOne(fetchMore, index, ids) {
-    fetchMore({
-      variables: { limit: 1, ids },
-      updateQuery: (prev, { fetchMoreResult, variables }) => {
-        const { randomRecipes } = prev
-        const newRecipe = fetchMoreResult.randomRecipes[0]
+  function removeRecipe(index) {
+    const newRecipes = [...recipes]
+    console.log(index)
+    newRecipes.splice(index, 1)
+    console.log(newRecipes)
+    setRecipes(newRecipes)
+  }
 
-        const newArr = Object.assign([], randomRecipes, { [index]: newRecipe })
-        return {
-          ...prev,
-          randomRecipes: newArr,
-        }
-      },
-    })
+  async function insertOne(index) {
+    const { data } = await fetchRecipes(1)
+    const newRecipe = data.randomRecipes[0]
+    const updatedRecipes = [...recipes]
+    updatedRecipes.splice(index, 0, newRecipe)
+    console.log(recipes)
+    console.log(updatedRecipes)
+    setRecipes(updatedRecipes)
+  }
+
+  async function replaceOne(index) {
+    const { data } = await fetchRecipes(1)
+    console.log(index)
+    const newRecipe = data.randomRecipes[0]
+    const updatedRecipes = Object.assign([], recipes, { [index]: newRecipe })
+    setRecipes(updatedRecipes)
   }
 
   const mapRecipeToIndex = indexes => (obj, recipe, i) => {
-    const recipeIndex = parseInt(indexes[i], 10)
+    const recipeIndex = indexes[i]
     obj[recipeIndex] = recipe
     return obj
   }
 
-  function update(fetchMore, indexes, ids) {
-    fetchMore({
-      variables: { limit: indexes.length, ids },
-      updateQuery: (prev, { fetchMoreResult, variables }) => {
-        const mapped = fetchMoreResult.randomRecipes.reduce(
-          mapRecipeToIndex(indexes),
-          {}
-        )
-
-        return {
-          ...prev,
-          randomRecipes: prev.randomRecipes.map((recipe, i) =>
-            indexes.includes(i) ? mapped[i] : recipe
-          ),
-        }
-      },
-    })
+  async function refetchNotFrozen() {
+    const indexes = enabledAndNotFrozen.map(day => day.index)
+    console.log(indexes)
+    // const { data } = await fetchRecipes(enabledAndNotFrozen.length)
+    // const mapped = data.randomRecipes.reduce(mapRecipeToIndex(indexes), {})
   }
 
-  const limit = Object.keys(days).filter(day => days[day].enabled).length
-
-  const dayArray = Object.keys(days).map(day => days[day])
-  const enabledDays = dayArray.filter(day => day.enabled)
-  const enabledAndNotFrozen = enabledDays.filter(day => !day.frozen)
-
   return (
-    <Query query={RECIPES} variables={{ limit, ids: [] }}>
-      {({ data, loading, error, updateQuery, fetchMore }) => {
-        const ids =
-          data.randomRecipes &&
-          data.randomRecipes.map(recipe => parseInt(recipe.id, 10))
-
-        return (
-          <Wrapper>
-            <Bar days={dayArray} toggle={toggle} />
-            <Days days={enabledDays} />
-            <Recipes>
-              {loading
-                ? null
-                : data.randomRecipes.map((recipe, i) => (
-                    <Recipe
-                      key={recipe.id}
-                      frozen={days[i].frozen}
-                      {...recipe}
-                    />
-                  ))}
-            </Recipes>
-            <Actions>
-              {enabledDays.map((day, i) => (
-                <RecipeActions
-                  key={day.name}
-                  frozen={day.frozen}
-                  freeze={() => freeze(day.index)}
-                  refetch={() => refetchOne(fetchMore, i, ids)}
-                />
-              ))}
-            </Actions>
-          </Wrapper>
-        )
-      }}
-    </Query>
+    <Wrapper>
+      <Bar days={dayArray} toggle={toggle} />
+      <Days days={enabledDays} />
+      <Recipes>
+        {loading
+          ? null
+          : recipes.map((recipe, i) => (
+              <Recipe key={recipe.id} frozen={days[i].frozen} {...recipe} />
+            ))}
+      </Recipes>
+      <Actions>
+        {enabledDays.map((day, i) => (
+          <RecipeActions
+            key={day.name}
+            frozen={day.frozen}
+            freeze={freeze.bind(null, day.index)}
+            refetch={replaceOne.bind(null, i)}
+          />
+        ))}
+      </Actions>
+    </Wrapper>
   )
 }
 
-export default Week
+export default withApollo(Week)

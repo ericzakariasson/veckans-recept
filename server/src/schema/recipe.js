@@ -8,7 +8,7 @@ module.exports = gql`
   }
 
   type Recipe {
-    id: ID!
+    id: Int!
     providerId: String
     provider: String
     url: String
