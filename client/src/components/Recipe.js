@@ -19,7 +19,6 @@ const Card = styled.div`
   display: flex;
   position: relative;
   flex: 1;
-  max-width: 769px;
 
   &::after {
     content: '';
@@ -33,7 +32,6 @@ const Card = styled.div`
 `
 
 const Image = styled.div`
-  background: red;
   flex: 1;
 
   position: relative;

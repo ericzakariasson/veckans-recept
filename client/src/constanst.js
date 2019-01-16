@@ -25,7 +25,7 @@ export const WEEK_DAYS = {
     name: 'Torsdag',
     recipe: null,
     frozen: false,
-    enabled: false,
+    enabled: true,
   },
   4: {
     index: 4,
@@ -33,6 +33,22 @@ export const WEEK_DAYS = {
     recipe: null,
     frozen: false,
     enabled: true,
+  },
+  5: {
+    index: 5,
+    name: 'Lördag',
+    recipe: null,
+    frozen: false,
+    enabled: false,
+    weekend: true,
+  },
+  6: {
+    index: 6,
+    name: 'Söndag',
+    recipe: null,
+    frozen: false,
+    enabled: false,
+    weekend: true,
   },
 }
 

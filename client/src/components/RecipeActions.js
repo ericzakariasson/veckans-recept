@@ -22,6 +22,7 @@ const Button = styled.button`
   height: 48px;
   border-radius: 50px;
   padding: 0;
+  cursor: pointer;
 
   svg {
     stroke-width: 1;
