@@ -68,12 +68,17 @@ const App = ({ client }) => {
       setError(error)
     }
 
-    return { data, loading, networkStatus }
+    return {
+      randomRecipes: data.randomRecipes.map((recipe, index) => ({
+        ...recipe,
+        index,
+      })),
+    }
   }
 
   async function initialFetch() {
-    const { data } = await fetchRecipes()
-    setRecipes(data.randomRecipes)
+    const { randomRecipes } = await fetchRecipes()
+    setRecipes(randomRecipes)
     setLoading(false)
   }
 
@@ -124,17 +129,16 @@ const App = ({ client }) => {
   }
 
   async function insertOne(index) {
-    const { data } = await fetchRecipes(1)
-    const newRecipe = data.randomRecipes[0]
+    const { randomRecipes } = await fetchRecipes(1)
+    const newRecipe = randomRecipes[0]
     const updatedRecipes = [...recipes]
     updatedRecipes.splice(index, 0, newRecipe)
     setRecipes(updatedRecipes)
   }
 
   async function replaceOne(index) {
-    const { data } = await fetchRecipes(1)
-    console.log(index)
-    const newRecipe = data.randomRecipes[0]
+    const { randomRecipes } = await fetchRecipes(1)
+    const newRecipe = randomRecipes[0]
 
     const updatedRecipes = Object.assign([], recipes, { [index]: newRecipe })
     setRecipes(updatedRecipes)
@@ -148,11 +152,8 @@ const App = ({ client }) => {
 
   async function refetchNotFrozen() {
     const dayIndexes = enabledAndNotFrozen.map(day => day.index)
-    const { data } = await fetchRecipes(enabledAndNotFrozen.length)
-    const mappedRecipes = data.randomRecipes.reduce(
-      mapRecipeToIndex(dayIndexes),
-      {}
-    )
+    const { randomRecipes } = await fetchRecipes(enabledAndNotFrozen.length)
+    const mappedRecipes = randomRecipes.reduce(mapRecipeToIndex(dayIndexes), {})
     const updatedRecipes = recipes.map((recipe, i) =>
       dayIndexes.includes(i) ? mappedRecipes[i] : recipe
     )

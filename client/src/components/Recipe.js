@@ -1,17 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { animated } from 'react-spring'
 
-const Wrapper = styled.article`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-  }
-`
-
-const Card = styled.div`
+const Card = styled(animated.article)`
   border-radius: 6px;
   overflow: hidden;
   background: #fff;
@@ -19,6 +10,11 @@ const Card = styled.div`
   display: flex;
   position: relative;
   flex: 1;
+  transform-origin: 0 0;
+
+  &:not(:last-of-type) {
+    margin-bottom: 20px;
+  }
 
   &::after {
     content: '';
@@ -80,6 +76,7 @@ const Info = styled.li`
 `
 
 const Recipe = ({
+  style,
   id,
   title,
   image,
@@ -87,19 +84,17 @@ const Recipe = ({
   difficulty,
   numberOfIngredients,
 }) => (
-  <Wrapper>
-    <Card>
-      <Image url={image} />
-      <Content>
-        <Title>{title}</Title>
-        <InfoList>
-          <Info>{time} min</Info>
-          <Info>{difficulty}</Info>
-          <Info>{numberOfIngredients} ingredienser</Info>
-        </InfoList>
-      </Content>
-    </Card>
-  </Wrapper>
+  <Card style={style}>
+    <Image url={image} />
+    <Content>
+      <Title>{title}</Title>
+      <InfoList>
+        <Info>{time} min</Info>
+        <Info>{difficulty}</Info>
+        <Info>{numberOfIngredients} ingredienser</Info>
+      </InfoList>
+    </Content>
+  </Card>
 )
 
 export default Recipe

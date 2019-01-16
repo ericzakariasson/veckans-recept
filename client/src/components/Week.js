@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { Transition } from 'react-spring'
+
 import Recipe from './Recipe'
 import Days from './Days'
 import RecipeActions from './RecipeActions'
@@ -31,11 +33,31 @@ const Week = ({ days, loading, recipes, replaceOne, toggleFrozen }) => {
     <Wrapper>
       <Days days={days} />
       <Recipes>
-        {loading
-          ? null
-          : recipes.map((recipe, i) => (
-              <Recipe key={recipe.id} frozen={days[i].frozen} {...recipe} />
-            ))}
+        {loading ? null : (
+          <Transition
+            native
+            unique
+            items={recipes}
+            keys={recipe => recipe.id}
+            from={{
+              opacity: 0,
+            }}
+            enter={{
+              opacity: 1,
+            }}
+            leave={{
+              opacity: 0,
+            }}
+          >
+            {recipe => props => (
+              <Recipe
+                style={props}
+                frozen={days[recipe.index].frozen}
+                {...recipe}
+              />
+            )}
+          </Transition>
+        )}
       </Recipes>
       <Actions>
         {days.map((day, i) => (
