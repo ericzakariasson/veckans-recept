@@ -35,12 +35,19 @@ const DayIcon = styled.li`
   justify-content: center;
   font-weight: 700;
   border-radius: 3px;
+  cursor: pointer;
+  transition: ${p => p.theme.transition};
 
   background: ${p => (p.enabled ? p.theme.main : p.theme.light)};
   color: ${p => (p.enabled ? '#FFF' : p.theme.main)};
 
   &:not(:last-of-type) {
     margin-right: 10px;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    background: ${p => (p.enabled ? p.theme.main : p.theme.rgba.main(15))};
   }
 `
 
@@ -55,6 +62,19 @@ const Button = styled.button`
   font-weight: 600;
   outline: none;
   cursor: pointer;
+  transition: ${p => p.theme.transition};
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+    transition: ${p => p.theme.transition};
+  }
+
+  &:active {
+    transform: scale(0.99);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+    transition: ${p => p.theme.transition};
+  }
 `
 
 const Bar = ({ days, toggle, refetch, daysToRefetch }) => {

@@ -1,20 +1,25 @@
 import React from 'react'
 import styled from 'styled-components'
-import { animated } from 'react-spring'
+import { Transition, animated, config } from 'react-spring'
 
-const Card = styled(animated.article)`
+import Day from './Day'
+import RecipeActions from './RecipeActions'
+
+const Card = styled(animated.div)`
   border-radius: 6px;
-  overflow: hidden;
   background: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  display: flex;
-  position: relative;
-  flex: 1;
-  transform-origin: 0 0;
+  box-shadow: ${p =>
+    p.frozen
+      ? '0 2px 4px rgba(0, 0, 0, 0.08)'
+      : '0 4px 16px rgba(0, 0, 0, 0.08)'};
+  transform: scale(${p => (p.frozen ? 0.98 : 1)});
 
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-  }
+  flex: 1;
+  transition: ${p => p.theme.transition};
+  position: relative;
+  /* transform-origin: 0 0; */
+  overflow: hidden;
+  height: 90px;
 
   &::after {
     content: '';
@@ -24,6 +29,14 @@ const Card = styled(animated.article)`
     height: 100%;
     width: 5px;
     background: ${p => p.theme.main};
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: ${p =>
+      p.frozen
+        ? '0 2px 4px rgba(0, 0, 0, 0.08)'
+        : '0 4px 24px rgba(0, 0, 0, 0.08)'};
   }
 `
 
@@ -66,7 +79,7 @@ const Info = styled.li`
   }
 
   &:not(:first-of-type) {
-    position: relative
+    position: relative;
 
     &::before {
       content: '•';
@@ -75,26 +88,73 @@ const Info = styled.li`
   }
 `
 
+const Wrapper = styled(animated.article)`
+  display: flex;
+  &:not(:last-of-type) {
+    margin-bottom: 20px;
+  }
+`
+
+const Inner = styled(animated.div)`
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+`
+
 const Recipe = ({
   style,
+  day,
   id,
-  title,
+  /* title,
   image,
   time,
   difficulty,
-  numberOfIngredients,
+  numberOfIngredients, */
+  frozen,
+  freeze,
+  refetch,
+  ...recipeProps
 }) => (
-  <Card style={style}>
-    <Image url={image} />
-    <Content>
-      <Title>{title}</Title>
-      <InfoList>
-        <Info>{time} min</Info>
-        <Info>{difficulty}</Info>
-        <Info>{numberOfIngredients} ingredienser</Info>
-      </InfoList>
-    </Content>
-  </Card>
+  <Wrapper style={style}>
+    <Day day={day} />
+    <Card frozen={frozen.toString()}>
+      <Transition
+        items={recipeProps}
+        keys={id}
+        unique
+        native
+        initial={null}
+        from={{ transform: 'translate3d(0, -100%, 0)' }}
+        enter={{ transform: 'translate3d(0, 0%, 0)' }}
+        leave={{ transform: 'translate3d(0, 100%, 0)' }}
+        config={config.gentle}
+      >
+        {({
+          image,
+          title,
+          time,
+          difficulty,
+          numberOfIngredients,
+        }) => styles => (
+          <Inner style={styles}>
+            <Image url={image} />
+            <Content>
+              <Title>{title}</Title>
+              <InfoList>
+                <Info>{time} min</Info>
+                <Info>{difficulty}</Info>
+                <Info>{numberOfIngredients} ingredienser</Info>
+              </InfoList>
+            </Content>
+          </Inner>
+        )}
+      </Transition>
+    </Card>
+    <RecipeActions frozen={frozen} freeze={freeze} refetch={refetch} />
+  </Wrapper>
 )
 
 export default Recipe

@@ -1,17 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Transition } from 'react-spring'
+import { Transition, config } from 'react-spring'
 
 import Recipe from './Recipe'
-import Days from './Days'
 import RecipeActions from './RecipeActions'
 
 const Wrapper = styled.main`
   display: flex;
   margin: 0 auto;
   max-width: 1000px;
-  padding-bottom: 120px;
+  padding-bottom: 60px;
   max-width: ${p => p.theme.maxWidth};
   margin: 0 auto;
 `
@@ -22,23 +21,29 @@ const Recipes = styled.section`
   flex: 1;
 `
 
-const Actions = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 40px;
-`
+const Week = ({
+  days,
+  enabledDays,
+  loading,
+  recipes,
+  replaceOne,
+  toggleFrozen,
+}) => {
+  function isFrozen(index) {
+    return enabledDays[index] ? days[index].frozen : false
+  }
 
-const Week = ({ days, loading, recipes, replaceOne, toggleFrozen }) => {
   return (
     <Wrapper>
-      <Days days={days} />
       <Recipes>
         {loading ? null : (
           <Transition
             native
             unique
+            reset
             items={recipes}
-            keys={recipe => recipe.id}
+            keys={(recipe, i) => i}
+            trail={100}
             from={{
               opacity: 0,
             }}
@@ -49,26 +54,19 @@ const Week = ({ days, loading, recipes, replaceOne, toggleFrozen }) => {
               opacity: 0,
             }}
           >
-            {recipe => props => (
+            {(recipe, state, index) => styles => (
               <Recipe
-                style={props}
-                frozen={days[recipe.index].frozen}
+                day={enabledDays[index] || null}
+                style={styles}
+                frozen={isFrozen(index)}
+                freeze={toggleFrozen.bind(null, index)}
+                refetch={replaceOne.bind(null, index)}
                 {...recipe}
               />
             )}
           </Transition>
         )}
       </Recipes>
-      <Actions>
-        {days.map((day, i) => (
-          <RecipeActions
-            key={day.name}
-            frozen={day.frozen}
-            freeze={toggleFrozen.bind(null, day.index)}
-            refetch={replaceOne.bind(null, i)}
-          />
-        ))}
-      </Actions>
     </Wrapper>
   )
 }

@@ -59,7 +59,7 @@ const App = ({ client }) => {
   async function fetchRecipes(limit = defaultParams.limit) {
     const ids = recipes.map(recipe => recipe.id)
 
-    const { data, networkStatus, error, loading } = await client.query({
+    const { data, error } = await client.query({
       query: QUERY_RECIPES,
       variables: { limit, ids },
     })
@@ -168,7 +168,8 @@ const App = ({ client }) => {
     <Wrapper>
       <Header />
       <Week
-        days={enabledDays}
+        days={dayArray}
+        enabledDays={enabledDays}
         loading={loading}
         recipes={recipes}
         replaceOne={replaceOne}
