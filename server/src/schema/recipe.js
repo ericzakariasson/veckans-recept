@@ -15,7 +15,7 @@ module.exports = gql`
     title: String!
     description: String
     difficulty: String
-    time: String
+    time: Int
     portions: Int
     numberOfIngredients: Int
     type: String

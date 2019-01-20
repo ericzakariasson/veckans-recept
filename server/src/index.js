@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const { sequelize, models } = require('./models');
 
 const schema = require('./schema');
@@ -19,11 +19,5 @@ sequelize
   .then(() => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);
     server.listen(PORT, () => console.log(`Apollo Server running on http://localhost:${PORT}/graphql`));
-
-    // models.Recipe.findByPk('1', {
-    //   include: [
-    //     models
-    //   ]
-    // }).then(r => console.log(JSON.stringify(r, null, 4)));
   })
   .catch(err => console.error(err));
