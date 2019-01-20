@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const Fixed = styled.aside`
   position: fixed;
@@ -96,6 +97,13 @@ const Bar = ({ days, toggle, refetch, daysToRefetch }) => {
       </MaxWidth>
     </Fixed>
   )
+}
+
+Bar.propTypes = {
+  days: PropTypes.array.isRequired,
+  daysToRefetch: PropTypes.number.isRequired,
+  toggle: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
 }
 
 export default Bar

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
-import { Transition, config } from 'react-spring'
+import { Transition } from 'react-spring'
 
 import Recipe from './Recipe'
-import RecipeActions from './RecipeActions'
 
 const Wrapper = styled.main`
   display: flex;
@@ -69,6 +69,15 @@ const Week = ({
       </Recipes>
     </Wrapper>
   )
+}
+
+Week.propTypes = {
+  days: PropTypes.array,
+  enabledDays: PropTypes.array,
+  loading: PropTypes.bool,
+  recipes: PropTypes.array,
+  replaceOne: PropTypes.func,
+  toggleFrozen: PropTypes.func,
 }
 
 export default Week

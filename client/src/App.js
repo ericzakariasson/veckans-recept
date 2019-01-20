@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
+import PropTypes from 'prop-types'
 
 import Header from './components/Header'
 import Week from './components/Week'
@@ -183,6 +184,10 @@ const App = ({ client }) => {
       />
     </Wrapper>
   )
+}
+
+App.propTypes = {
+  client: PropTypes.object.isRequired,
 }
 
 export default withApollo(App)

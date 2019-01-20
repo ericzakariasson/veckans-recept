@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Transition, animated, config } from 'react-spring'
+import PropTypes from 'prop-types'
 
 import Day from './Day'
 import RecipeActions from './RecipeActions'
@@ -108,11 +109,6 @@ const Recipe = ({
   style,
   day,
   id,
-  /* title,
-  image,
-  time,
-  difficulty,
-  numberOfIngredients, */
   frozen,
   freeze,
   refetch,
@@ -156,5 +152,19 @@ const Recipe = ({
     <RecipeActions frozen={frozen} freeze={freeze} refetch={refetch} />
   </Wrapper>
 )
+
+Recipe.propTypes = {
+  style: PropTypes.object,
+  day: PropTypes.object,
+  id: PropTypes.number.isRequired,
+  frozen: PropTypes.bool.isRequired,
+  freeze: PropTypes.func,
+  refetch: PropTypes.func,
+  image: PropTypes.string,
+  title: PropTypes.string,
+  time: PropTypes.number,
+  difficulty: PropTypes.string,
+  numberOfIngredients: PropTypes.number,
+}
 
 export default Recipe

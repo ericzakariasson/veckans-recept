@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 import { Unlock, Lock, Repeat } from 'react-feather'
 
@@ -91,6 +92,12 @@ const RecipeActions = ({ freeze, frozen, refetch }) => {
       </Replace>
     </Wrapper>
   )
+}
+
+RecipeActions.propTypes = {
+  freeze: PropTypes.func,
+  frozen: PropTypes.bool,
+  refetch: PropTypes.func,
 }
 
 export default RecipeActions

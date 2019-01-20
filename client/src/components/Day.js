@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
+import PropTypes from 'prop-types'
 import { Transition, animated } from 'react-spring'
 
 const Name = styled(animated.span)`
@@ -28,4 +28,9 @@ const Day = ({ day }) => (
     {day => day !== null && (style => <Name style={style}>{day.name}</Name>)}
   </Transition>
 )
+
+Day.propTypes = {
+  day: PropTypes.object,
+}
+
 export default Day
