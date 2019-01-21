@@ -116,6 +116,11 @@ module.exports.UNITS = [
     name: 'Nypa',
     short: 'nypa',
     type: 'VOLUME'
+  },
+  {
+    name: 'Portioner',
+    short: 'port',
+    type: 'OTHER'
   }
 ];
 

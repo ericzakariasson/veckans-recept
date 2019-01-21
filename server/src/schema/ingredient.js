@@ -3,6 +3,8 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   extend type Query {
     ingredient(id: ID!): Ingredient
+    items: [Item]
+    units: [Unit]
   }
 
   type Ingredient {
@@ -13,10 +15,12 @@ module.exports = gql`
   }
 
   type Item {
+    id: Int!
     name: String!
   }
 
   type Unit {
+    id: Int!
     name: String!
     short: String!
     qty: Float
