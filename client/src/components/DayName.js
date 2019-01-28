@@ -12,6 +12,10 @@ const Name = styled(animated.span)`
 
   &:not(:last-of-type) {
   }
+
+  ${p => p.theme.media.tablet`
+    margin-bottom: 20px;
+  `}
 `
 
 const Day = ({ day }) => (

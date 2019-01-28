@@ -13,6 +13,7 @@ const Card = styled(animated.div)`
   transform: scale(${p => (p.frozen ? 0.98 : 1)});
 
   flex: 1;
+  width: 100%;
   transition: ${p => p.theme.transition};
   position: relative;
   /* transform-origin: 0 0; */
@@ -36,25 +37,40 @@ const Card = styled(animated.div)`
         ? '0 2px 4px rgba(0, 0, 0, 0.08)'
         : '0 4px 24px rgba(0, 0, 0, 0.08)'};
   }
+
+  ${p => p.theme.media.tablet`
+    margin-bottom: 20px;
+  `}
+
+  ${p => p.theme.media.mobile`
+    height: 200px;
+  `}
 `
 
 const Image = styled.div`
-  flex: 1;
-
   position: relative;
   background-image: url(${p => p.url});
   background-size: cover;
+  width: 100%;
+  height: 100px;
 
-  &::before {
-    content: '';
-    padding-top: 100%;
-    display: block;
-  }
+  ${p => p.theme.media.mobile.up`
+    flex: 1;
+  
+    &::before {
+      content: '';
+      padding-top: 100%;
+      display: block;
+    }
+  `}
 `
 
 const Content = styled.div`
   padding: 20px;
-  flex: 7;
+
+  ${p => p.theme.media.mobile.up`
+    flex: 7;
+  `}
 `
 
 const Title = styled.h1`
@@ -62,7 +78,10 @@ const Title = styled.h1`
   font-family: ${p => p.theme.fonts.body};
   font-weight: 600;
   margin-bottom: 10px;
-  white-space: pre;
+
+  ${p => p.theme.media.mobile.up`
+    white-space: pre;
+  `}
 `
 
 const InfoList = styled.ul``
@@ -93,6 +112,11 @@ const Inner = styled(animated.div)`
   left: 0;
   height: 100%;
   width: 100%;
+
+  ${p => p.theme.media.mobile`
+    flex-direction: column;
+    align-items: flex-start;
+  `}
 `
 
 const Recipe = ({ id, frozen, ...recipeProps }) => (

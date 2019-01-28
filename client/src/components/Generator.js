@@ -13,6 +13,10 @@ import { WEEK_DAYS as initialDays } from '../constanst'
 
 const Wrapper = styled.div`
   padding: 40px;
+
+  ${p => p.theme.media.tablet`
+    padding: 40px 20px;
+  `}
 `
 
 const QUERY_RECIPES = gql`
@@ -197,6 +201,10 @@ const App = ({ client }) => {
         <h1>Hittade inga recept</h1>
       </Wrapper>
     )
+  }
+
+  if (error) {
+    console.log(error)
   }
 
   return (

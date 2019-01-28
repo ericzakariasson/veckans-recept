@@ -9,9 +9,19 @@ import RecipeActions from './RecipeActions'
 
 const Wrapper = styled(animated.article)`
   display: flex;
+
   &:not(:last-of-type) {
     margin-bottom: 20px;
+
+    ${p => p.theme.media.tablet`
+      margin-bottom: 60px;
+    `}
   }
+
+  ${p => p.theme.media.tablet`
+    flex-direction: column;
+    align-items: center;
+  `}
 `
 
 const Day = ({ style, day, frozen, recipe, actions }) => {

@@ -7,11 +7,10 @@ import { Unlock, Lock, Repeat } from 'react-feather'
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 40px;
 
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-  }
+  ${p => p.theme.media.tablet.up`
+    margin-left: 40px;
+  `}
 `
 
 const Button = styled.button`

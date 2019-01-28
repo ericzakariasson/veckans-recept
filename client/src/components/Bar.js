@@ -76,6 +76,10 @@ const Button = styled.button`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
     transition: ${p => p.theme.transition};
   }
+
+  ${p => p.theme.media.mobile`
+    display: none;
+  `}
 `
 
 const Bar = ({ days, toggle, refetch, daysToRefetch }) => {
