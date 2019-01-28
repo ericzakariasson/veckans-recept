@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 
 const Wrapper = styled.div`
@@ -27,9 +28,12 @@ const Input = styled.input`
   font-size: 1rem;
   padding: 15px 18px;
   padding-right: 80px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
   outline: none;
   width: 100%;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
+  line-height: normal;
+  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
+  -webkit-appearance: none;
 
   &::placeholder {
     color: #ddd;
@@ -107,6 +111,10 @@ const MailWeek = ({ createWeek }) => {
       </Form>
     </Wrapper>
   )
+}
+
+MailWeek.propTypes = {
+  createWeek: PropTypes.func,
 }
 
 export default MailWeek

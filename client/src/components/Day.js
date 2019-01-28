@@ -29,7 +29,7 @@ const Day = ({ style, day, frozen, recipe, actions }) => {
     <Wrapper style={style}>
       <DayName day={day} />
       <Recipe frozen={frozen} {...recipe} />
-      <RecipeActions {...actions} />
+      <RecipeActions frozen={frozen} {...actions} />
     </Wrapper>
   )
 }

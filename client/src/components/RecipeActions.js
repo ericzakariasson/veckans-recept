@@ -94,9 +94,9 @@ const RecipeActions = ({ freeze, frozen, refetch }) => {
 }
 
 RecipeActions.propTypes = {
-  freeze: PropTypes.func,
-  frozen: PropTypes.bool,
-  refetch: PropTypes.func,
+  frozen: PropTypes.bool.isRequired,
+  freeze: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
 }
 
 export default RecipeActions

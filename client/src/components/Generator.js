@@ -97,6 +97,7 @@ const App = ({ client }) => {
   }
 
   function toggleFrozen(dayIndex) {
+    console.log(dayIndex)
     const day = days[dayIndex]
 
     const newDays = {
