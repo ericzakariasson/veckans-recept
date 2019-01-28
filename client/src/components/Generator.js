@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import Header from '../components/Header'
 import Week from '../components/Week'
 import Bar from '../components/Bar'
+import MailWeek from '../components/MailWeek'
 
 import { WEEK_DAYS as initialDays } from '../constanst'
 
@@ -23,6 +24,14 @@ const QUERY_RECIPES = gql`
       time
       difficulty
       numberOfIngredients
+    }
+  }
+`
+
+const CREATE_WEEK = gql`
+  mutation CreateWeek($input: WeekInput) {
+    createWeek(input: $input) {
+      url
     }
   }
 `
@@ -60,13 +69,13 @@ const App = ({ client }) => {
   async function fetchRecipes(limit = defaultParams.limit) {
     const ids = recipes.map(recipe => recipe.id)
 
-    const { data, error } = await client.query({
+    const { data, error: err } = await client.query({
       query: QUERY_RECIPES,
       variables: { limit, ids },
     })
 
-    if (error) {
-      setError(error)
+    if (err) {
+      return setError(err)
     }
 
     return {
@@ -161,13 +170,39 @@ const App = ({ client }) => {
     setRecipes(updatedRecipes)
   }
 
-  if (error) {
-    throw new Error(error)
+  async function createWeek(email) {
+    const recipeInput = enabledDays.map((day, i) => ({
+      day: day.name,
+      order: i,
+      recipe: recipes[i].id,
+    }))
+
+    const { data, err } = client.mutate({
+      mutation: CREATE_WEEK,
+      variables: {
+        input: {
+          email,
+          week: recipeInput,
+        },
+      },
+    })
+
+    console.log(data, err)
+  }
+
+  if (!loading && recipes.length === 0) {
+    return (
+      <Wrapper>
+        <Header />
+        <h1>Hittade inga recept</h1>
+      </Wrapper>
+    )
   }
 
   return (
     <Wrapper>
       <Header />
+      <MailWeek createWeek={createWeek} />
       <Week
         days={dayArray}
         enabledDays={enabledDays}

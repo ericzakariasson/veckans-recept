@@ -58,11 +58,14 @@ You should now be able to use the app
 - Sequelize
 - GraphQL
 - Apollo Server
-  <!-- - Apollo -->
-  <!-- - React -->
-  <!-- - Styled components -->
+- Apollo
+- React
+- Styled components
 
 ## Todo
 
-- Build frontend
-- Store difficulty as integer
+- [x] Build frontend
+- [ ] Store difficulty as integer
+- [ ] Make frontend responsive
+- [ ] User accounts
+- [ ] User roles

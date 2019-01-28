@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
@@ -60,26 +60,68 @@ const Value = styled.span`
 `
 
 const Board = ({ title, columns, data }) => {
-  console.log(data)
+  const [field, setField] = useState('')
+  const [direction, setDirection] = useState('ASC')
 
   const labels = Object.keys(data[0]).filter(n => !n.startsWith('__'))
+
+  function setOrderBy(label) {
+    if (label === field) {
+      return direction === 'ASC' ? setDirection('DESC') : setDirection('ASC')
+    }
+
+    setField(label)
+    setDirection('ASC')
+  }
 
   return (
     <Plate>
       <Title>{title}</Title>
       <Labels>
         {labels.map(label => (
-          <Label key={label}>{label}</Label>
+          <Label key={label} onClick={() => setOrderBy(label)}>
+            {label}
+          </Label>
         ))}
       </Labels>
       <List>
-        {data.map(item => (
-          <Item key={item.name}>
-            {labels.map(label => (
-              <Value>{item[label]}</Value>
-            ))}
-          </Item>
-        ))}
+        {data
+          .sort((a, b) => {
+            const order = a[field]
+
+            if (order === undefined) {
+              return 0
+            }
+
+            if (typeof order === 'number') {
+              if (direction === 'ASC') {
+                return a[field] > b[field] ? 1 : -1
+              }
+
+              if (direction === 'DESC') {
+                return a[field] > b[field] ? -1 : 1
+              }
+            }
+
+            if (typeof order === 'string') {
+              if (direction === 'ASC') {
+                return a[field].localeCompare(b[field])
+              }
+
+              if (direction === 'DESC') {
+                return b[field].localeCompare(a[field])
+              }
+            }
+
+            return 0
+          })
+          .map(item => (
+            <Item key={item.name}>
+              {labels.map(label => (
+                <Value key={item[label]}>{item[label]}</Value>
+              ))}
+            </Item>
+          ))}
       </List>
     </Plate>
   )

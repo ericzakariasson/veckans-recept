@@ -1,36 +1,35 @@
 import React from 'react'
-import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Transition, animated } from 'react-spring'
+import styled from 'styled-components'
+import { animated } from 'react-spring'
 
-const Name = styled(animated.span)`
-  flex: 1;
+import DayName from './DayName'
+import Recipe from './Recipe'
+import RecipeActions from './RecipeActions'
+
+const Wrapper = styled(animated.article)`
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 100px;
-
   &:not(:last-of-type) {
+    margin-bottom: 20px;
   }
 `
 
-const Day = ({ day }) => (
-  <Transition
-    native
-    unique
-    reset
-    items={day}
-    initial={null}
-    from={{ opacity: 0 }}
-    enter={{ opacity: 1 }}
-    from={{ opacity: 0 }}
-  >
-    {day => day !== null && (style => <Name style={style}>{day.name}</Name>)}
-  </Transition>
-)
+const Day = ({ style, day, frozen, recipe, actions }) => {
+  return (
+    <Wrapper style={style}>
+      <DayName day={day} />
+      <Recipe frozen={frozen} {...recipe} />
+      <RecipeActions {...actions} />
+    </Wrapper>
+  )
+}
 
 Day.propTypes = {
+  style: PropTypes.object,
   day: PropTypes.object,
+  frozen: PropTypes.bool,
+  recipe: PropTypes.object,
+  actions: PropTypes.objectOf(PropTypes.func),
 }
 
 export default Day

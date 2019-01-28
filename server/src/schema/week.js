@@ -3,34 +3,36 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   extend type Query {
     week(id: Int): Week
+    weeks: [Week!]
   }
 
   type Week {
+    id: Int!
     recipes: [WeekRecipes]!
   }
 
   type WeekRecipes {
-    order: Int!
     day: String!
     recipe: Recipe!
+    order: Int!
   }
 
   extend type Mutation {
-    createWeek(input: WeekInput): WeekRespone!
+    createWeek(input: WeekInput): WeekResponse
   }
 
-  type WeekInput {
+  input WeekInput {
     email: String!
-    recipes: [WeekRecipeInput]
+    week: [WeekRecipeInput]
   }
 
-  type WeekRecipeInput {
+  input WeekRecipeInput {
     day: String!
+    recipeId: Int!
     order: Int!
-    recipe: Int!
   }
 
-  type WeekRespone {
+  type WeekResponse {
     url: String!
   }
 `;

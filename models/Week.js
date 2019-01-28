@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Week.associate = models => {
-    Week.hasMany(models.WeekRecipe);
+    Week.hasMany(models.WeekRecipe, { as: 'recipes' });
   };
 
   return Week;

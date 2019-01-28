@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import { Transition } from 'react-spring'
 
-import Recipe from './Recipe'
+import Day from './Day'
 
 const Wrapper = styled.main`
   display: flex;
@@ -15,7 +15,7 @@ const Wrapper = styled.main`
   margin: 0 auto;
 `
 
-const Recipes = styled.section`
+const List = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -35,7 +35,7 @@ const Week = ({
 
   return (
     <Wrapper>
-      <Recipes>
+      <List>
         {loading ? null : (
           <Transition
             native
@@ -55,18 +55,20 @@ const Week = ({
             }}
           >
             {(recipe, state, index) => styles => (
-              <Recipe
-                day={enabledDays[index] || null}
+              <Day
                 style={styles}
+                day={enabledDays[index] || null}
+                recipe={recipe}
                 frozen={isFrozen(index)}
-                freeze={toggleFrozen.bind(null, index)}
-                refetch={replaceOne.bind(null, index)}
-                {...recipe}
+                actions={{
+                  freeze: toggleFrozen.bind(null, index),
+                  refetch: replaceOne.bind(null, index),
+                }}
               />
             )}
           </Transition>
         )}
-      </Recipes>
+      </List>
     </Wrapper>
   )
 }

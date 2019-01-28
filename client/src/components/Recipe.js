@@ -3,9 +3,6 @@ import styled from 'styled-components'
 import { Transition, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
-import Day from './Day'
-import RecipeActions from './RecipeActions'
-
 const Card = styled(animated.div)`
   border-radius: 6px;
   background: #fff;
@@ -89,13 +86,6 @@ const Info = styled.li`
   }
 `
 
-const Wrapper = styled(animated.article)`
-  display: flex;
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-  }
-`
-
 const Inner = styled(animated.div)`
   display: flex;
   position: absolute;
@@ -105,61 +95,39 @@ const Inner = styled(animated.div)`
   width: 100%;
 `
 
-const Recipe = ({
-  style,
-  day,
-  id,
-  frozen,
-  freeze,
-  refetch,
-  ...recipeProps
-}) => (
-  <Wrapper style={style}>
-    <Day day={day} />
-    <Card frozen={frozen.toString()}>
-      <Transition
-        items={recipeProps}
-        keys={id}
-        unique
-        native
-        initial={null}
-        from={{ transform: 'translate3d(0, -100%, 0)' }}
-        enter={{ transform: 'translate3d(0, 0%, 0)' }}
-        leave={{ transform: 'translate3d(0, 100%, 0)' }}
-        config={config.gentle}
-      >
-        {({
-          image,
-          title,
-          time,
-          difficulty,
-          numberOfIngredients,
-        }) => styles => (
-          <Inner style={styles}>
-            <Image url={image} />
-            <Content>
-              <Title>{title}</Title>
-              <InfoList>
-                <Info>{time} min</Info>
-                <Info>{difficulty}</Info>
-                <Info>{numberOfIngredients} ingredienser</Info>
-              </InfoList>
-            </Content>
-          </Inner>
-        )}
-      </Transition>
-    </Card>
-    <RecipeActions frozen={frozen} freeze={freeze} refetch={refetch} />
-  </Wrapper>
+const Recipe = ({ id, frozen, ...recipeProps }) => (
+  <Card frozen={frozen.toString()}>
+    <Transition
+      items={recipeProps}
+      keys={id}
+      unique
+      native
+      initial={null}
+      from={{ transform: 'translate3d(0, -100%, 0)' }}
+      enter={{ transform: 'translate3d(0, 0%, 0)' }}
+      leave={{ transform: 'translate3d(0, 100%, 0)' }}
+      config={config.gentle}
+    >
+      {({ image, title, time, difficulty, numberOfIngredients }) => styles => (
+        <Inner style={styles}>
+          <Image url={image} />
+          <Content>
+            <Title>{title}</Title>
+            <InfoList>
+              <Info>{time} min</Info>
+              <Info>{difficulty}</Info>
+              <Info>{numberOfIngredients} ingredienser</Info>
+            </InfoList>
+          </Content>
+        </Inner>
+      )}
+    </Transition>
+  </Card>
 )
 
 Recipe.propTypes = {
-  style: PropTypes.object,
-  day: PropTypes.object,
   id: PropTypes.number.isRequired,
-  frozen: PropTypes.bool.isRequired,
-  freeze: PropTypes.func,
-  refetch: PropTypes.func,
+  frozen: PropTypes.bool,
   image: PropTypes.string,
   title: PropTypes.string,
   time: PropTypes.number,
