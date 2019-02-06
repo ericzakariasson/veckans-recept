@@ -16,7 +16,6 @@ services:
     build:
       context: ./server
     environment:
-      - BATCH_SIZE=${BATCH_SIZE}
       - PORT=${API_PORT}
       - DB_USER=${DB_USER}
       - DB_DATABASE=${DB_DATABASE}
@@ -30,6 +29,13 @@ services:
       - db
   scraper:
     build: ./scraper
+    environment:
+      - BATCH_SIZE=${BATCH_SIZE}
+      - DB_USER=${DB_USER}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - SCRAPE_SCHEDULE=${SCRAPE_SCHEDULE}
     depends_on:
       - db
     volumes:

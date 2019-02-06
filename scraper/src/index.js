@@ -50,7 +50,11 @@ const scrape = async (params = initialParams) => {
 
   const units = await models.Unit.findAll({ raw: true });
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    // executablePath: '/usr/bin/chromium-browser', // Docker alpine
+    args: ['--no-sandbox', '--disable-dev-shm-usage'] // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md
+  });
+
   const page = await browser.newPage();
 
   const url = baseUrl(params);
@@ -104,7 +108,7 @@ sequelize
     console.log('Start scraping');
     await scrape();
 
-    process.exit(1);
+    process.exit(0);
   })
   .catch(console.error);
 

@@ -19,6 +19,22 @@ const Wrapper = styled.div`
   `}
 `
 
+const TextWrapper = styled.div`
+  padding: 80px 0;
+`
+
+const NoRecipes = styled.h1`
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
+`
+
+const TryAgain = styled.p`
+  text-align: center;
+  font-size: 1rem;
+  color: #aaa;
+`
+
 const QUERY_RECIPES = gql`
   query RandomRecipes($limit: Int!, $ids: [Int]!) {
     randomRecipes(limit: $limit, ids: $ids) {
@@ -199,7 +215,10 @@ const App = ({ client }) => {
     return (
       <Wrapper>
         <Header />
-        <h1>Hittade inga recept</h1>
+        <TextWrapper>
+          <NoRecipes>Hittade inga recept</NoRecipes>
+          <TryAgain>Testa igen om en stund</TryAgain>
+        </TextWrapper>
       </Wrapper>
     )
   }
