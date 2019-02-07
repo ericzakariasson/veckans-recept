@@ -14,7 +14,7 @@ const Wrapper = styled(animated.article)`
     margin-bottom: 20px;
 
     ${p => p.theme.media.tablet`
-      margin-bottom: 60px;
+      margin-bottom: 3rem;
     `}
   }
 

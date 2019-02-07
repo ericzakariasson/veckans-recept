@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import PropTypes from 'prop-types'
+import { popup, PopupContainer, WeekCreatedMessage } from './Popup'
 
 import Header from '../components/Header'
 import Week from '../components/Week'
@@ -195,10 +196,10 @@ const App = ({ client }) => {
     const recipeInput = enabledDays.map((day, i) => ({
       day: day.name,
       order: i,
-      recipe: recipes[i].id,
+      recipeId: recipes[i].id,
     }))
 
-    const { data, err } = client.mutate({
+    /* const { data, err } = client.mutate({
       mutation: CREATE_WEEK,
       variables: {
         input: {
@@ -206,9 +207,9 @@ const App = ({ client }) => {
           week: recipeInput,
         },
       },
-    })
+    }) */
 
-    console.log(data, err)
+    popup({ props: { url: '/vecka/2' }, component: WeekCreatedMessage })
   }
 
   if (!loading && recipes.length === 0) {
@@ -229,6 +230,7 @@ const App = ({ client }) => {
 
   return (
     <Wrapper>
+      <PopupContainer />
       <Header />
       <MailWeek createWeek={createWeek} />
       <Week

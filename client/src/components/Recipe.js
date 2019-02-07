@@ -31,7 +31,7 @@ const Card = styled(animated.div)`
   }
 
   &:hover {
-    transform: translateY(-2px) scale(1.005);
+    transform: translateY(-2px) scale(1.001);
     box-shadow: ${p =>
       p.frozen
         ? '0 2px 4px rgba(0, 0, 0, 0.08)'
@@ -55,7 +55,9 @@ const Image = styled.div`
   height: 100px;
 
   ${p => p.theme.media.mobile.up`
-    flex: 1;
+    width: 90px;
+    height: auto;
+    flex-shrink: 0;
   
     &::before {
       content: '';
@@ -69,18 +71,20 @@ const Content = styled.div`
   padding: 20px;
 
   ${p => p.theme.media.mobile.up`
-    flex: 7;
+    width: calc(100% - 90px);
   `}
 `
 
 const Title = styled.h1`
-  font-size: 1.4em;
+  font-size: 1.3em;
   font-family: ${p => p.theme.fonts.body};
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 
   ${p => p.theme.media.mobile.up`
-    white-space: pre;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   `}
 `
 

@@ -6,7 +6,7 @@ volumes:
 services:
   web:
     build: client/
-    environment:
+    args:
       - REACT_APP_API_URL=http://localhost:${API_PORT}/graphql
     ports:
       - '80:80'

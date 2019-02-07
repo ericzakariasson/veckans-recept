@@ -93,7 +93,8 @@ const MailWeek = ({ createWeek }) => {
     createWeek(value)
   }
 
-  const isValid = EMAIL_REGEX.test(value)
+  // const isValid = EMAIL_REGEX.test(value)
+  const isValid = true
 
   return (
     <Wrapper>
