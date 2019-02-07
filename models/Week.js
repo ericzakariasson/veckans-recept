@@ -7,13 +7,6 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.INTEGER,
         allowNull: true
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          isEmail: true
-        }
       }
       /* url: {
         type: DataTypes.STRING,
@@ -27,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Week.associate = models => {
+    Week.belongsTo(models.User);
     Week.hasMany(models.WeekRecipe, { as: 'recipes' });
   };
 
