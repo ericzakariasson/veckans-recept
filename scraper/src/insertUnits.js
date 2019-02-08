@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const { UNITS } = require('./constants');
-const { models, sequelize } = require('../../models');
+const { models, sequelize } = require('./db');
 
 const syncUnits = () => {
   sequelize

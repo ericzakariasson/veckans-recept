@@ -1,0 +1,22 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "makemigration": "node ./node_modules/sequelize-auto-migrations/bin/makemigration",
+    "runmigration": "node ./node_modules/sequelize-auto-migrations/bin/runmigration",
+    "migrate": "npm run runmigration"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.42.0",
+    "sequelize-auto-migrations": "^1.0.3",
+    "sequelize-cli": "^5.4.0"
+  }
+}

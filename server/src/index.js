@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
-const { sequelize, models } = require('./models');
+const db = require('./db');
 
 const schema = require('./schema');
 const resolvers = require('./resolvers');
@@ -9,12 +9,12 @@ const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
   playground: true,
-  context: () => ({ models })
+  context: () => ({ models: db })
 });
 
 const PORT = process.env.PORT || 4000;
 
-sequelize
+db.sequelize
   .sync()
   .then(() => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);

@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const { extractRecipe } = require('./extractRecipe');
 const { UNITS } = require('./constants');
 
-const { models, sequelize } = require('./models');
+const { models, sequelize } = require('./db');
 const { convertMS, asyncForEach } = require('./helpers');
 
 const isProduction = process.env.NODE_ENV === 'production';

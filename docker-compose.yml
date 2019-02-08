@@ -1,13 +1,14 @@
-version: '3'
+version: '3.5'
 
 volumes:
   postgres_data: {}
 
 services:
   web:
-    build: client/
-    args:
-      - REACT_APP_API_URL=http://localhost:${API_PORT}/graphql
+    build:
+      context: client/
+      args:
+        REACT_APP_API_UR: 'http://localhost:${API_PORT}/graphql'
     ports:
       - '80:80'
     links:
@@ -24,7 +25,7 @@ services:
     ports:
       - '${API_PORT}:${API_PORT}'
     volumes:
-      - ./models:/models
+      - ./db:/db
     depends_on:
       - db
   scraper:
@@ -39,7 +40,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./models:/models
+      - ./db:/db
   db:
     image: postgres:latest
     environment:

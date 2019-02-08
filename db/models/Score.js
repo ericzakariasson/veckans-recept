@@ -1,4 +1,4 @@
-const { modelOptions } = require('./index');
+const { modelOptions } = require('../config/config');
 
 module.exports = (sequelize, DataTypes) => {
   const Score = sequelize.define(
