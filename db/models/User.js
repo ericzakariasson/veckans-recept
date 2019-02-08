@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = models => {
     User.hasMany(models.Week);
+    User.belongsToMany(models.Recipe, {
+      through: models.Favorite,
+      as: 'favorites'
+    });
   };
 
   return User;

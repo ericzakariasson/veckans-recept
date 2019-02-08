@@ -44,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     Recipe.hasOne(m.Score);
     Recipe.hasMany(m.Section);
+    Recipe.belongsToMany(m.User, {
+      through: m.Favorite,
+      as: 'favorites'
+    });
   };
 
   Recipe.insert = async (data, url) => {

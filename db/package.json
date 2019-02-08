@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "makemigration": "node ./node_modules/sequelize-auto-migrations/bin/makemigration",
+    "makemigration": "node ./node_modules/sequelize-auto-migrations/bin/makemigration --name",
     "runmigration": "node ./node_modules/sequelize-auto-migrations/bin/runmigration",
     "migrate": "npm run runmigration"
   },
