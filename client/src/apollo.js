@@ -23,7 +23,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 const httpLink = new createHttpLink({
   uri: isProduction
     ? process.env.REACT_APP_API_URL
-    : 'http://localhost:4000/graphql',
+    : `http://${'192.168.1.226'}:4000/graphql`,
 })
 
 const cache = new InMemoryCache()

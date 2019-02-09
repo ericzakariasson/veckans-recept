@@ -3,19 +3,11 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Transition, animated } from 'react-spring'
 
-const Name = styled(animated.span)`
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 100px;
-
-  &:not(:last-of-type) {
-  }
-
-  ${p => p.theme.media.tablet`
-    margin-bottom: 20px;
-  `}
+export const Name = styled(animated.span)`
+  margin-bottom: 1rem;
+  color: #bbb;
+  text-transform: uppercase;
+  font-weight: 600;
 `
 
 const Day = ({ day }) => (

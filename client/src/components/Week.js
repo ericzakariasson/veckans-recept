@@ -1,24 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import SwipeableViews from 'react-swipeable-views'
 
 import { Transition } from 'react-spring'
 
 import Day from './Day'
+import DayPlaceholder from './DayPlaceholder'
 
 const Wrapper = styled.main`
-  display: flex;
-  margin: 0 auto;
-  max-width: 1000px;
-  padding-bottom: 60px;
   max-width: ${p => p.theme.maxWidth};
-  margin: 0 auto;
+  width: 100vw;
+  flex: 1;
 `
 
-const List = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+const SwipeList = styled(SwipeableViews)`
+  height: 100%;
+  padding: 0 20px;
+
+  .react-swipeable-view-container {
+    height: 100%;
+  }
 `
 
 const Week = ({
@@ -35,9 +37,11 @@ const Week = ({
 
   return (
     <Wrapper>
-      <List>
-        {loading ? null : (
-          <Transition
+      <SwipeList slideStyle={{ padding: '0 10px 20px 10px' }}>
+        {loading ? (
+          <DayPlaceholder />
+        ) : (
+          /*  <Transition
             native
             unique
             reset
@@ -55,20 +59,22 @@ const Week = ({
             }}
           >
             {(recipe, state, index) => styles => (
-              <Day
-                style={styles}
-                day={enabledDays[index] || null}
-                recipe={recipe}
-                frozen={isFrozen(index)}
-                actions={{
-                  freeze: toggleFrozen.bind(null, index),
-                  refetch: replaceOne.bind(null, index),
-                }}
-              />
-            )}
-          </Transition>
+              )}
+          </Transition> */
+          recipes.map((recipe, index) => (
+            <Day
+              key={recipe.id}
+              day={enabledDays[index] || null}
+              recipe={recipe}
+              frozen={isFrozen(index)}
+              actions={{
+                freeze: toggleFrozen.bind(null, index),
+                refetch: replaceOne.bind(null, index),
+              }}
+            />
+          ))
         )}
-      </List>
+      </SwipeList>
     </Wrapper>
   )
 }

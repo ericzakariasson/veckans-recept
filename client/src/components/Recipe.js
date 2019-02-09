@@ -3,48 +3,16 @@ import styled from 'styled-components'
 import { Transition, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
-const Card = styled(animated.div)`
-  border-radius: 6px;
+export const Card = styled(animated.div)`
+  border-radius: 10px;
   background: #fff;
-  box-shadow: ${p =>
-    p.frozen
-      ? '0 2px 4px rgba(0, 0, 0, 0.08)'
-      : '0 4px 16px rgba(0, 0, 0, 0.08)'};
-  transform: scale(${p => (p.frozen ? 0.98 : 1)});
-
-  flex: 1;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   width: 100%;
   transition: ${p => p.theme.transition};
   position: relative;
-  /* transform-origin: 0 0; */
+  flex: 1;
   overflow: hidden;
-  height: 90px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 5px;
-    background: ${p => p.theme.main};
-  }
-
-  &:hover {
-    transform: translateY(-2px) scale(1.001);
-    box-shadow: ${p =>
-      p.frozen
-        ? '0 2px 4px rgba(0, 0, 0, 0.08)'
-        : '0 4px 24px rgba(0, 0, 0, 0.08)'};
-  }
-
-  ${p => p.theme.media.tablet`
-    margin-bottom: 20px;
-  `}
-
-  ${p => p.theme.media.mobile`
-    height: 200px;
-  `}
+  margin-bottom: 20px;
 `
 
 const Image = styled.div`
@@ -52,27 +20,25 @@ const Image = styled.div`
   background-image: url(${p => p.url});
   background-size: cover;
   width: 100%;
-  height: 100px;
+  flex: 1;
 
-  ${p => p.theme.media.mobile.up`
-    width: 90px;
-    height: auto;
-    flex-shrink: 0;
-  
-    &::before {
-      content: '';
-      padding-top: 100%;
-      display: block;
-    }
-  `}
+  &::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 150%;
+    height: 25%;
+    border-radius: 100%;
+    background: #fff;
+    transform: translate(-50%, -15%);
+  }
 `
 
 const Content = styled.div`
   padding: 20px;
-
-  ${p => p.theme.media.mobile.up`
-    width: calc(100% - 90px);
-  `}
+  background: #fff;
+  position: relative;
 `
 
 const Title = styled.h1`
@@ -92,11 +58,12 @@ const InfoList = styled.ul``
 
 const Info = styled.li`
   display: inline-block;
-  color: ${p => p.theme.main};
+  /* color: ${p => p.theme.main}; */
+  color: #777;
   font-weight: 700;
 
   &:not(:last-of-type) {
-    margin-right: 10px;
+    margin-right: 0.5rem;
   }
 
   &:not(:first-of-type) {
@@ -104,28 +71,29 @@ const Info = styled.li`
 
     &::before {
       content: '•';
-      margin-right: 10px;
+      margin-right: 0.5rem;
     }
   }
 `
 
 const Inner = styled(animated.div)`
   display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
+  flex-direction: column;
+  position: relative;
   height: 100%;
-  width: 100%;
-
-  ${p => p.theme.media.mobile`
-    flex-direction: column;
-    align-items: flex-start;
-  `}
 `
 
-const Recipe = ({ id, frozen, ...recipeProps }) => (
+const Recipe = ({
+  id,
+  frozen,
+  image,
+  title,
+  time,
+  difficulty,
+  numberOfIngredients,
+}) => (
   <Card frozen={frozen.toString()}>
-    <Transition
+    {/* <Transition
       items={recipeProps}
       keys={id}
       unique
@@ -137,19 +105,19 @@ const Recipe = ({ id, frozen, ...recipeProps }) => (
       config={config.gentle}
     >
       {({ image, title, time, difficulty, numberOfIngredients }) => styles => (
-        <Inner style={styles}>
-          <Image url={image} />
-          <Content>
-            <Title>{title}</Title>
-            <InfoList>
-              <Info>{time} min</Info>
-              <Info>{difficulty}</Info>
-              <Info>{numberOfIngredients} ingredienser</Info>
-            </InfoList>
-          </Content>
-        </Inner>
       )}
-    </Transition>
+    </Transition> */}
+    <Inner>
+      <Image url={image} />
+      <Content>
+        <Title>{title}</Title>
+        <InfoList>
+          <Info>{time} min</Info>
+          <Info>{difficulty}</Info>
+          <Info>{numberOfIngredients} ingredienser</Info>
+        </InfoList>
+      </Content>
+    </Inner>
   </Card>
 )
 

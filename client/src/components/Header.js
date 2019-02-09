@@ -7,12 +7,12 @@ const StyledHeader = styled.header`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `
 
 const Header = () => (
   <StyledHeader>
-    <Logo size={260} />
+    <Logo />
   </StyledHeader>
 )
 

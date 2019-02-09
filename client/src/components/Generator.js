@@ -13,11 +13,12 @@ import MailWeek from '../components/MailWeek'
 import { WEEK_DAYS as initialDays } from '../constanst'
 
 const Wrapper = styled.div`
-  padding: 40px;
-
-  ${p => p.theme.media.tablet`
-    padding: 40px 20px;
-  `}
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 52px;
+  background: #fcfcfc;
 `
 
 const TextWrapper = styled.div`
@@ -232,7 +233,6 @@ const App = ({ client }) => {
     <Wrapper>
       <PopupContainer />
       <Header />
-      <MailWeek createWeek={createWeek} />
       <Week
         days={dayArray}
         enabledDays={enabledDays}

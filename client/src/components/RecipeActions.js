@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   `}
 `
 
-const Button = styled.button`
+export const Button = styled.button`
   border: none;
   background: none;
   margin: 0;
@@ -29,13 +29,13 @@ const Button = styled.button`
   justify-content: center;
 
   svg {
-    transform: translateY(-1px);
-    stroke-width: 1;
+    stroke-width: 2;
     transition: ${p => p.theme.transition};
   }
 `
 
 const Freeze = styled(Button)`
+  display: none;
   border: ${p => (p.frozen ? 'none' : '1px solid #ccc')};
   margin-right: 20px;
   background: ${p => (p.frozen ? '#EEE' : 'none')};
@@ -61,17 +61,15 @@ const Freeze = styled(Button)`
 `
 
 const Replace = styled(Button)`
-  background: ${p => p.theme.rgba.main(5)};
-  opacity: ${p => (p.disabled ? 0.2 : 1)};
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: ${p => p.theme.transition};
 
   &:hover {
-    background: ${p => p.theme.rgba.main(10)};
     transition: ${p => p.theme.transition};
   }
 
   &:active {
-    background: ${p => p.theme.rgba.main(20)};
     transition: ${p => p.theme.transition};
   }
 
@@ -87,7 +85,7 @@ const RecipeActions = ({ freeze, frozen, refetch }) => {
         {frozen ? <Lock color="#222" /> : <Unlock color="#CCC" />}
       </Freeze>
       <Replace disabled={frozen} onClick={refetch}>
-        <Repeat />
+        <Repeat size={20} />
       </Replace>
     </Wrapper>
   )

@@ -1,9 +1,9 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { XCircle } from 'react-feather'
+import { Link2 } from 'react-feather'
 
-import { toast, cssTransition, ToastContainer, Slide } from 'react-toastify'
+import { toast, ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 export const PopupContainer = styled(ToastContainer)`

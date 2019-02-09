@@ -7,29 +7,20 @@ import DayName from './DayName'
 import Recipe from './Recipe'
 import RecipeActions from './RecipeActions'
 
-const Wrapper = styled(animated.article)`
+export const Wrapper = styled(animated.article)`
   display: flex;
-
-  &:not(:last-of-type) {
-    margin-bottom: 20px;
-
-    ${p => p.theme.media.tablet`
-      margin-bottom: 3rem;
-    `}
-  }
-
-  ${p => p.theme.media.tablet`
-    flex-direction: column;
-    align-items: center;
-  `}
+  flex-direction: column;
+  align-items: center;
+  flex: 1 0 auto;
+  height: 100%;
 `
 
 const Day = ({ style, day, frozen, recipe, actions }) => {
   return (
-    <Wrapper style={style}>
+    <Wrapper>
       <DayName day={day} />
       <Recipe frozen={frozen} {...recipe} />
-      <RecipeActions frozen={frozen} {...actions} />
+      <RecipeActions />
     </Wrapper>
   )
 }
