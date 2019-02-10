@@ -1,6 +1,6 @@
 # Veckans Recept
 
-A webapp which scrapes and suggests recipes for the week
+Scraped recipes and provides them in a web application
 
 ## Gettings started
 
@@ -8,67 +8,46 @@ A webapp which scrapes and suggests recipes for the week
 
 You need to have the following services to get the applications running
 
-- Postgres database to store the recipes
-- Node.js to run the applications
-
-You also have to setup a database and a user in Postgres for the application to use.
+- Docker
+- Docker Compose
 
 #### Installing
 
 Clone the repo and `cd veckans-recept`
 
-Do `npm install` for the following directories:
+Optionally change the environment variables in `.env` to fit your needs.
 
-- `scraper/`
-- `server/`
-- `client/`
-
-Once you have installed all packages, fill in databse connection info in the `.env`-file located in both `server/` and `scraper/`.
-
-`DB_HOST` - eg. `123.45.678.910`
-
-`DB_PORT` - default `5432`
-
-`DB_DATABASE` - name of the database
-
-`DB_USER` - User you have created
-
-`DB_PASSWORD` - Password for user
-
-In `scraper/` you have to set how many recipes to scraped at a time. You set this value in the `BATCH_SIZE` field in the `scraped/.env`-file.
-
-`BATCH_SIZE=8192` - Recommended value is `8192`
+Recommended value for `BATCH_SIZE` is `8192`, or `2^n`
 
 #### Running
 
-Once you have all set up you can run `npm run scrape` in the `scraper/` directory. This will start to scrape and fill the database with recipes.
+Do `docker-compose up` and you should be all set!
 
-When you have scraped som recipes, you can start the GraphQL-server by running `npm start` in the `server/` directory.
+Client will be available at `localhost`
 
-And finally you can start the client by running `npm start` in the `client/` directory.
-
-You should now be able to use the app
+Graphql Playground will be available at `localhost:${API_PORT}/graphql`
 
 ## Built with
 
 - Node
-- Postgres
 - Puppeteer
 - Cheerio
 - Sequelize
+- Postgres
 - GraphQL
 - Apollo Server
 - React (Hooks)
-- Apollo
+- React Apollo
+- React Spring
 - Styled components
 
 ## Todo
 
 - [ ] Store difficulty as integer
 - [ ] Make frontend responsive
-- [ ] User accounts
-- [ ] User roles
-- [ ] Favorite
+- [ ] User accounts
+- [ ] User roles
+- [ ] Favorites
 - [ ] Extract type of recipe
 - [ ] Add filtering
 - [ ] Set custom week settings, eg fish atleast once a week
