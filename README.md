@@ -58,14 +58,17 @@ You should now be able to use the app
 - Sequelize
 - GraphQL
 - Apollo Server
+- React (Hooks)
 - Apollo
-- React
 - Styled components
 
 ## Todo
 
-- [x] Build frontend
 - [ ] Store difficulty as integer
 - [ ] Make frontend responsive
 - [ ] User accounts
 - [ ] User roles
+- [ ] Favorite
+- [ ] Extract type of recipe
+- [ ] Add filtering
+- [ ] Set custom week settings, eg fish atleast once a week
