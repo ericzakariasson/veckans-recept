@@ -78,13 +78,13 @@ const Replace = styled(Button)`
   }
 `
 
-const RecipeActions = ({ freeze, frozen, refetch }) => {
+const RecipeActions = ({ freeze, frozen, replace }) => {
   return (
     <Wrapper>
       <Freeze frozen={frozen} onClick={freeze}>
         {frozen ? <Lock color="#222" /> : <Unlock color="#CCC" />}
       </Freeze>
-      <Replace disabled={frozen} onClick={refetch}>
+      <Replace disabled={frozen} onClick={replace}>
         <Repeat size={20} />
       </Replace>
     </Wrapper>
@@ -94,7 +94,7 @@ const RecipeActions = ({ freeze, frozen, refetch }) => {
 RecipeActions.propTypes = {
   frozen: PropTypes.bool.isRequired,
   freeze: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired,
+  replace: PropTypes.func.isRequired,
 }
 
 export default RecipeActions

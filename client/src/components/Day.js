@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { animated } from 'react-spring'
+import { animated, useTransition } from 'react-spring'
 
 import DayName from './DayName'
 import Recipe from './Recipe'
 import RecipeActions from './RecipeActions'
 
-export const Wrapper = styled(animated.article)`
+export const Wrapper = styled.article`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,12 +15,16 @@ export const Wrapper = styled(animated.article)`
   height: 100%;
 `
 
-const Day = ({ style, day, frozen, recipe, actions }) => {
+const Day = ({ style, day, frozen, recipe }) => {
   return (
-    <Wrapper>
+    <Wrapper style={style}>
       <DayName day={day} />
-      <Recipe frozen={frozen} {...recipe} />
-      <RecipeActions />
+      <Recipe frozen={recipe.frozen} recipe={recipe} />
+      <RecipeActions
+        frozen={frozen}
+        replace={recipe.replace}
+        freeze={recipe.freeze}
+      />
     </Wrapper>
   )
 }
@@ -30,7 +34,6 @@ Day.propTypes = {
   day: PropTypes.object,
   frozen: PropTypes.bool,
   recipe: PropTypes.object,
-  actions: PropTypes.objectOf(PropTypes.func),
 }
 
 export default Day

@@ -4,6 +4,10 @@ import { Card } from './Recipe'
 import { Wrapper } from './Day'
 import { Button } from './RecipeActions'
 
+const WrapperPlaceholder = styled(Wrapper)`
+  padding: 0 20px 20px;
+`
+
 const DayNamePlaceholder = styled.div`
   width: 64px;
   height: 16px;
@@ -34,8 +38,8 @@ const ButtonPlaceholder = styled(Button)`
   background: #fff;
 `
 
-const RecipePlaceholder = () => (
-  <Wrapper>
+const RecipePlaceholder = ({ style }) => (
+  <WrapperPlaceholder style={style}>
     <DayNamePlaceholder />
     <CardPlaceholder>
       <ContentPlaceholder />
@@ -43,7 +47,7 @@ const RecipePlaceholder = () => (
     <Buttons>
       <ButtonPlaceholder />
     </Buttons>
-  </Wrapper>
+  </WrapperPlaceholder>
 )
 
 export default RecipePlaceholder

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Transition, animated, config } from 'react-spring'
+import { useTransition, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
 export const Card = styled(animated.div)`
@@ -9,16 +9,29 @@ export const Card = styled(animated.div)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   width: 100%;
   transition: ${p => p.theme.transition};
-  position: relative;
   flex: 1;
   overflow: hidden;
   margin-bottom: 20px;
+  position: relative;
+`
+
+const Inner = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transform-origin: 50% 500%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 `
 
 const Image = styled.div`
   position: relative;
   background-image: url(${p => p.url});
   background-size: cover;
+  background-color: #eee;
   width: 100%;
   flex: 1;
 
@@ -76,59 +89,51 @@ const Info = styled.li`
   }
 `
 
-const Inner = styled(animated.div)`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: 100%;
-`
+const Recipe = ({ frozen, recipe }) => {
+  const transition = useTransition(recipe, recipe.id, {
+    from: { transform: `rotate(-10deg)` },
+    enter: { transform: `rotate(0deg)` },
+    leave: { transform: `rotate(10deg)` },
+    unique: true,
+    initial: false,
+    config: config.stiff,
+  })
 
-const Recipe = ({
-  id,
-  frozen,
-  image,
-  title,
-  time,
-  difficulty,
-  numberOfIngredients,
-}) => (
-  <Card frozen={frozen.toString()}>
-    {/* <Transition
-      items={recipeProps}
-      keys={id}
-      unique
-      native
-      initial={null}
-      from={{ transform: 'translate3d(0, -100%, 0)' }}
-      enter={{ transform: 'translate3d(0, 0%, 0)' }}
-      leave={{ transform: 'translate3d(0, 100%, 0)' }}
-      config={config.gentle}
-    >
-      {({ image, title, time, difficulty, numberOfIngredients }) => styles => (
+  return (
+    <Card frozen={frozen.toString()}>
+      {transition.map(
+        ({
+          item: { image, title, time, difficulty, numberOfIngredients, id },
+          props,
+          key,
+        }) => (
+          <Inner key={key} style={props}>
+            <Image url={image} />
+            <Content>
+              <Title>{title}</Title>
+              <InfoList>
+                <Info>{time} min</Info>
+                <Info>{difficulty}</Info>
+                <Info>{numberOfIngredients} ingredienser</Info>
+              </InfoList>
+            </Content>
+          </Inner>
+        )
       )}
-    </Transition> */}
-    <Inner>
-      <Image url={image} />
-      <Content>
-        <Title>{title}</Title>
-        <InfoList>
-          <Info>{time} min</Info>
-          <Info>{difficulty}</Info>
-          <Info>{numberOfIngredients} ingredienser</Info>
-        </InfoList>
-      </Content>
-    </Inner>
-  </Card>
-)
+    </Card>
+  )
+}
 
 Recipe.propTypes = {
-  id: PropTypes.number.isRequired,
-  frozen: PropTypes.bool,
-  image: PropTypes.string,
-  title: PropTypes.string,
-  time: PropTypes.number,
-  difficulty: PropTypes.string,
-  numberOfIngredients: PropTypes.number,
+  recipe: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    frozen: PropTypes.bool,
+    image: PropTypes.string,
+    title: PropTypes.string,
+    time: PropTypes.number,
+    difficulty: PropTypes.string,
+    numberOfIngredients: PropTypes.number,
+  }),
 }
 
 export default Recipe

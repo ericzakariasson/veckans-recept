@@ -225,6 +225,20 @@ const App = ({ client }) => {
     )
   }
 
+  function isFrozen(index) {
+    return enabledDays[index] ? days[index].frozen : false
+  }
+
+  function bindRecipe(recipe, index) {
+    return {
+      ...recipe,
+      freeze: toggleFrozen.bind(null, index),
+      replace: replaceOne.bind(null, index),
+      frozen: isFrozen(index),
+      day: enabledDays[index] || null,
+    }
+  }
+
   if (error) {
     console.log(error)
   }
@@ -237,9 +251,7 @@ const App = ({ client }) => {
         days={dayArray}
         enabledDays={enabledDays}
         loading={loading}
-        recipes={recipes}
-        replaceOne={replaceOne}
-        toggleFrozen={toggleFrozen}
+        recipes={recipes.map(bindRecipe)}
       />
       <Bar
         days={dayArray}
