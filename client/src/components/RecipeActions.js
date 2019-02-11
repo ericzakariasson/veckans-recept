@@ -1,8 +1,17 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react'
+import styled, { keyframes, css } from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { Unlock, Lock, Repeat } from 'react-feather'
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+`
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,6 +74,12 @@ const Replace = styled(Button)`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: ${p => p.theme.transition};
 
+  ${p =>
+    p.animate &&
+    css`
+      animation: ${spin} 0.4s ease-in-out;
+    `}
+
   &:hover {
     transition: ${p => p.theme.transition};
   }
@@ -78,15 +93,33 @@ const Replace = styled(Button)`
   }
 `
 
+function Shuffle({ shuffle, frozen }) {
+  const [animate, setAnimate] = useState(false)
+
+  function handleClick() {
+    setAnimate(true)
+    shuffle()
+  }
+
+  return (
+    <Replace
+      animate={animate}
+      disabled={frozen}
+      onClick={handleClick}
+      onAnimationEnd={() => setAnimate(false)}
+    >
+      <Repeat size={20} />
+    </Replace>
+  )
+}
+
 const RecipeActions = ({ freeze, frozen, replace }) => {
   return (
     <Wrapper>
       <Freeze frozen={frozen} onClick={freeze}>
         {frozen ? <Lock color="#222" /> : <Unlock color="#CCC" />}
       </Freeze>
-      <Replace disabled={frozen} onClick={replace}>
-        <Repeat size={20} />
-      </Replace>
+      <Shuffle shuffle={replace} frozen={frozen} />
     </Wrapper>
   )
 }

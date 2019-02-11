@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+import { Share } from 'react-feather'
+
 const Fixed = styled.aside`
   position: fixed;
   z-index: 1;
@@ -43,7 +45,7 @@ const DayIcon = styled.li`
   color: ${p => (p.enabled ? '#FFF' : p.theme.main)};
 
   &:not(:last-of-type) {
-    margin-right: 10px;
+    margin-right: 5px;
   }
 
   &:hover {
@@ -58,10 +60,11 @@ const Button = styled.button`
   border: none;
   border-radius: 6px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  padding: 12px 40px;
+  padding: 12px 20px;
   font-size: 1.2em;
   font-weight: 600;
   outline: none;
+  display: flex;
   cursor: pointer;
   transition: ${p => p.theme.transition};
 
@@ -77,16 +80,24 @@ const Button = styled.button`
     transition: ${p => p.theme.transition};
   }
 
-  ${p => p.theme.media.mobile`
-    display: none;
-  `}
+  svg {
+    margin-left: 10px;
+  }
 `
 
-const Bar = ({ days, toggle, refetch, daysToRefetch }) => {
+const ShareButton = styled(Button)``
+
+const ShuffleAll = styled(Button)`
+  ${p => p.theme.media.mobile`
+  display: none;
+`}
+`
+
+const Bar = ({ days, toggle, refetch, daysToRefetch, share }) => {
   return (
     <Fixed>
       <MaxWidth>
-        <DayList>
+        {/*  <DayList>
           {days.map(day => (
             <DayIcon
               key={day.name}
@@ -96,8 +107,11 @@ const Bar = ({ days, toggle, refetch, daysToRefetch }) => {
               {day.name.charAt(0)}
             </DayIcon>
           ))}
-        </DayList>
-        <Button onClick={refetch}>Slumpa {daysToRefetch} recept</Button>
+        </DayList> */}
+        <ShareButton onClick={share}>
+          Spara <Share size={20} color="#FFF" />
+        </ShareButton>
+        <ShuffleAll onClick={refetch}>Slumpa {daysToRefetch} recept</ShuffleAll>
       </MaxWidth>
     </Fixed>
   )

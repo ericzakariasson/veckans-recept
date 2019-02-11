@@ -13,6 +13,7 @@ export const Card = styled(animated.div)`
   overflow: hidden;
   margin-bottom: 20px;
   position: relative;
+  background: #fff;
 `
 
 const Inner = styled(animated.div)`
@@ -52,6 +53,9 @@ const Content = styled.div`
   padding: 20px;
   background: #fff;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const Title = styled.h1`
@@ -103,7 +107,7 @@ const Recipe = ({ frozen, recipe }) => {
     <Card frozen={frozen.toString()}>
       {transition.map(
         ({
-          item: { image, title, time, difficulty, numberOfIngredients, id },
+          item: { image, title, time, difficulty, numberOfIngredients },
           props,
           key,
         }) => (
@@ -125,9 +129,9 @@ const Recipe = ({ frozen, recipe }) => {
 }
 
 Recipe.propTypes = {
+  frozen: PropTypes.bool,
   recipe: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    frozen: PropTypes.bool,
     image: PropTypes.string,
     title: PropTypes.string,
     time: PropTypes.number,
