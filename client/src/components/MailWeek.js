@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
+import Ink from 'react-ink'
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  height: 100%;
+  justify-content: center;
+  flex: 1;
+  padding-bottom: 68px;
 `
 
 const Text = styled.p`
   text-align: center;
   margin-bottom: 20px;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #444;
 `
 
@@ -108,6 +112,7 @@ const MailWeek = ({ createWeek }) => {
         />
         <SendButton onClick={handleClick} disabled={!isValid}>
           Skicka
+          <Ink />
         </SendButton>
       </Form>
     </Wrapper>

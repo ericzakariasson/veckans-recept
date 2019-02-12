@@ -1,26 +1,23 @@
 import React from 'react'
-import Layout from './components/Layout'
-import Board from './components/Board'
+import Layout from './Layout'
+import Board from './Board'
 
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-const ALL_UNITS = gql`
-  query AllUnits {
-    units {
+const ALL_ITEMS = gql`
+  query AllItems {
+    items {
       id
       name
-      short
-      qty
-      type
     }
   }
 `
 
-const Units = () => {
+const Ingredients = () => {
   return (
     <Layout>
-      <Query query={ALL_UNITS}>
+      <Query query={ALL_ITEMS}>
         {({ loading, data, error }) => {
           if (loading) {
             return null
@@ -30,11 +27,11 @@ const Units = () => {
             throw Error(error)
           }
 
-          return <Board title={`Enheter`} data={data.units} />
+          return <Board title={`Ingredienser`} data={data.items} />
         }}
       </Query>
     </Layout>
   )
 }
 
-export default Units
+export default Ingredients

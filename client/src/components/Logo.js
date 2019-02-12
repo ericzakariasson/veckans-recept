@@ -7,7 +7,7 @@ const Text = styled.h1`
   font-family: ${p => p.theme.fonts.display};
   font-weight: 700;
   color: ${p => p.theme.main};
-  font-size: 2em;
+  font-size: 1.6em;
   position: relative;
 `
 

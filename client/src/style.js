@@ -34,7 +34,7 @@ export const theme = {
   rgba: {
     main: opacity => `rgba(15, 153, 96, ${opacity / 100})`,
   },
-  light: 'rgba(15, 153, 96, 0.05)',
+  light: 'rgba(15, 153, 96, 0.10)',
   black: '#222',
   transition: '0.2s ease-in-out',
   maxWidth: '65rem',

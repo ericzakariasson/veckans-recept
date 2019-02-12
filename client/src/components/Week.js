@@ -2,28 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import DayPlaceholder from './DayPlaceholder'
-import Days from './Days'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 
-const Wrapper = styled.main`
-  max-width: ${p => p.theme.maxWidth};
-  width: 100vw;
-  flex: 1;
+const GET_WEEK = gql`
+  query GetWeek($id: Int!) {
+    week(id: $id)
+  }
 `
 
-const Week = ({ loading, recipes }) => {
-  return (
-    <Wrapper>
-      {loading ? <DayPlaceholder /> : <Days recipes={recipes} />}
-    </Wrapper>
-  )
-}
+const Week = ({ match }) => {
+  const { id } = match.params
 
-Week.propTypes = {
-  days: PropTypes.array,
-  enabledDays: PropTypes.array,
-  loading: PropTypes.bool,
-  recipes: PropTypes.array,
+  return null
 }
 
 export default Week

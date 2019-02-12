@@ -6,19 +6,17 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { client } from './apollo'
 import { theme } from './style'
 
-import Dashboard from './admin/Dashboard'
-import Ingredients from './admin/Ingredients'
-import Units from './admin/Units'
+import Admin from './admin'
 import Generator from './components/Generator'
+import Week from './components/Week'
 
 const App = () => (
   <ApolloProvider client={client}>
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route path="/admin/ingredienser" component={Ingredients} />
-          <Route path="/admin/enheter" component={Units} />
-          <Route path="/admin" component={Dashboard} />
+          {/* <Route path="/admin" component={Admin} /> */}
+          <Route path="/vecka/:id" component={Week} />
           <Route path="/" component={Generator} />
         </Switch>
       </Router>

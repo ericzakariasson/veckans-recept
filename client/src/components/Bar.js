@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { Share } from 'react-feather'
@@ -41,16 +41,17 @@ const DayIcon = styled.li`
   cursor: pointer;
   transition: ${p => p.theme.transition};
 
-  background: ${p => (p.enabled ? p.theme.main : p.theme.light)};
+  background: ${p => (p.enabled ? p.theme.rgba.main(80) : p.theme.light)};
   color: ${p => (p.enabled ? '#FFF' : p.theme.main)};
+
+  ${p =>
+    p.active &&
+    css`
+      transform: translateY(-2px);
+    `}
 
   &:not(:last-of-type) {
     margin-right: 5px;
-  }
-
-  &:hover {
-    transform: scale(1.05);
-    background: ${p => (p.enabled ? p.theme.main : p.theme.rgba.main(15))};
   }
 `
 
@@ -81,11 +82,25 @@ const Button = styled.button`
   }
 
   svg {
-    margin-left: 10px;
   }
 `
 
-const ShareButton = styled(Button)``
+const ShareButton = styled(Button)`
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    transform: translateY(-1px);
+  }
+
+  opacity: ${p => (p.visible ? 1 : 0)};
+  transition: ${p => p.theme.transition};
+`
 
 const ShuffleAll = styled(Button)`
   ${p => p.theme.media.mobile`
@@ -93,23 +108,42 @@ const ShuffleAll = styled(Button)`
 `}
 `
 
-const Bar = ({ days, toggle, refetch, daysToRefetch, share }) => {
+const Bar = ({
+  days,
+  enabledDays,
+  toggle,
+  refetch,
+  daysToRefetch,
+  setActiveIndex,
+  activeIndex,
+  share,
+}) => {
+  const activeDayName = enabledDays[activeIndex]
+    ? enabledDays[activeIndex].name
+    : ''
+
+  const shareIndex = enabledDays.length
+
   return (
     <Fixed>
       <MaxWidth>
-        {/*  <DayList>
-          {days.map(day => (
+        <DayList>
+          {days.map((day, i) => (
             <DayIcon
               key={day.name}
               onClick={() => toggle(day.index)}
               enabled={day.enabled}
+              active={day.name === activeDayName}
             >
               {day.name.charAt(0)}
             </DayIcon>
           ))}
-        </DayList> */}
-        <ShareButton onClick={share}>
-          Spara <Share size={20} color="#FFF" />
+        </DayList>
+        <ShareButton
+          visible={shareIndex !== activeIndex}
+          onClick={() => setActiveIndex(shareIndex)}
+        >
+          <Share size={18} color="#FFF" />
         </ShareButton>
         <ShuffleAll onClick={refetch}>Slumpa {daysToRefetch} recept</ShuffleAll>
       </MaxWidth>

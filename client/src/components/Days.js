@@ -1,12 +1,16 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import SwipeableViews from 'react-swipeable-views'
-import { useTransition, animated } from 'react-spring'
 
 import Day from './Day'
+import DayPlaceholder from './DayPlaceholder'
+import MailWeek from './MailWeek'
 
-const Wrapper = styled(animated.div)`
-  height: 100%;
+const Wrapper = styled.div`
+  max-width: ${p => p.theme.maxWidth};
+  width: 100vw;
+  flex: 1;
 `
 
 const SwipeList = styled(SwipeableViews)`
@@ -23,29 +27,44 @@ const slideStyle = {
   position: 'relative',
 }
 
-const Days = ({ recipes, style }) => {
-  const transition = useTransition(recipes, recipe => recipe.id, {
-    from: { transform: `translateX(-100%)` },
-    enter: { transform: `translateX(0%)` },
-    leave: { transform: `translateX(100%)` },
-    unique: true,
-    initial: false,
-  })
-
+const Days = ({
+  recipes,
+  loading,
+  setActiveIndex,
+  activeIndex,
+  createWeek,
+}) => {
   return (
-    <Wrapper style={style}>
-      <SwipeList slideStyle={slideStyle}>
-        {recipes.map(recipe => (
-          <Day
-            key={recipe.day.index}
-            day={recipe.day}
-            recipe={recipe}
-            frozen={recipe.frozen}
-          />
-        ))}
-      </SwipeList>
+    <Wrapper>
+      {loading ? (
+        <DayPlaceholder />
+      ) : (
+        <SwipeList
+          onChangeIndex={i => setActiveIndex(i)}
+          index={activeIndex}
+          slideStyle={slideStyle}
+        >
+          {recipes.map(recipe => (
+            <Day
+              key={recipe.day.index}
+              day={recipe.day}
+              recipe={recipe}
+              frozen={recipe.frozen}
+            />
+          ))}
+          <MailWeek createWeek={createWeek} />
+        </SwipeList>
+      )}
     </Wrapper>
   )
+}
+
+Days.propTypes = {
+  recipes: PropTypes.array,
+  loading: PropTypes.bool,
+  setActiveIndex: PropTypes.func,
+  activeIndex: PropTypes.number,
+  createWeek: PropTypes.func,
 }
 
 export default Days

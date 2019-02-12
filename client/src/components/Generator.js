@@ -6,18 +6,18 @@ import PropTypes from 'prop-types'
 import { popup, PopupContainer, WeekCreatedMessage } from './Popup'
 
 import Header from '../components/Header'
-import Week from '../components/Week'
+import Days from '../components/Days'
 import Bar from '../components/Bar'
 import MailWeek from '../components/MailWeek'
 
 import { WEEK_DAYS as initialDays } from '../constanst'
 
 const Wrapper = styled.div`
-  padding: 40px 0;
+  padding: 30px 0;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-bottom: 52px;
+  padding-bottom: 60px;
   background: #fcfcfc;
 `
 
@@ -75,6 +75,8 @@ const App = ({ client }) => {
   const [recipes, setRecipes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
     initialFetch()
@@ -213,18 +215,6 @@ const App = ({ client }) => {
     popup({ props: { url: '/vecka/2' }, component: WeekCreatedMessage })
   }
 
-  if (!loading && recipes.length === 0) {
-    return (
-      <Wrapper>
-        <Header />
-        <TextWrapper>
-          <NoRecipes>Hittade inga recept</NoRecipes>
-          <TryAgain>Testa igen om en stund</TryAgain>
-        </TextWrapper>
-      </Wrapper>
-    )
-  }
-
   function isFrozen(index) {
     return enabledDays[index] ? days[index].frozen : false
   }
@@ -239,22 +229,36 @@ const App = ({ client }) => {
     }
   }
 
-  if (error) {
-    console.log(error)
+  if (!loading && recipes.length === 0) {
+    return (
+      <Wrapper>
+        <Header />
+        <TextWrapper>
+          <NoRecipes>Hittade inga recept</NoRecipes>
+          <TryAgain>Testa igen om en stund</TryAgain>
+        </TextWrapper>
+      </Wrapper>
+    )
   }
 
   return (
     <Wrapper>
       <PopupContainer />
       <Header />
-      <Week
+      <Days
         days={dayArray}
         enabledDays={enabledDays}
         loading={loading}
         recipes={recipes.map(bindRecipe)}
+        setActiveIndex={setActiveIndex}
+        activeIndex={activeIndex}
+        createWeek={createWeek}
       />
       <Bar
+        setActiveIndex={setActiveIndex}
+        activeIndex={activeIndex}
         days={dayArray}
+        enabledDays={enabledDays}
         toggle={toggleEnabled}
         refetch={refetchNotFrozen}
         daysToRefetch={enabledAndNotFrozen.length}

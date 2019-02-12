@@ -3,6 +3,7 @@ import styled, { keyframes, css } from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { Unlock, Lock, Repeat } from 'react-feather'
+import Ink from 'react-ink'
 
 const spin = keyframes`
   from {
@@ -36,6 +37,7 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   svg {
     stroke-width: 2;
@@ -109,6 +111,7 @@ function Shuffle({ shuffle, frozen }) {
       onAnimationEnd={() => setAnimate(false)}
     >
       <Repeat size={20} />
+      <Ink />
     </Replace>
   )
 }
