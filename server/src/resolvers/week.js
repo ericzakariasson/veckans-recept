@@ -23,8 +23,16 @@ module.exports = {
   },
   Mutation: {
     createWeek: async (parent, { input }, { models }) => {
+      let user;
+      await models.User.findOrCreate({
+        where: { email: input.email }
+      }).spread(u => (user = u.get({ plain: true })));
+
       const week = await models.Week.create(
-        { email: input.email, recipes: input.week },
+        {
+          recipes: input.week,
+          userId: user.id
+        },
         {
           include: [
             {

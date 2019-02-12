@@ -18,8 +18,6 @@ COPY ./package*.json /app/
 RUN npm install --production
 COPY ./ /app/
 
-RUN npm run migrate --prefix ../db
-
 RUN mkdir /cron
 RUN touch /cron/cron.log
 

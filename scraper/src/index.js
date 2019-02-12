@@ -96,7 +96,7 @@ const scrape = async (params = initialParams) => {
 const start = Date.now();
 
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(async () => {
     console.log(`Database connection to ${process.env.DB_HOST} established`);
     const unitsExists = (await models.Unit.count()) > 0;

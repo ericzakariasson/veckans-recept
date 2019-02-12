@@ -39,6 +39,8 @@ services:
       - SCRAPE_SCHEDULE=${SCRAPE_SCHEDULE}
     depends_on:
       - db
+    ports:
+      - '127.0.0.1:5000:5000'
     volumes:
       - ./db:/db
   db:

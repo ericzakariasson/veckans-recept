@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 
   WeekRecipe.associate = models => {
     WeekRecipe.belongsTo(models.Recipe);
+    WeekRecipe.belongsTo(models.Week);
   };
 
   return WeekRecipe;

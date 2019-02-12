@@ -14,6 +14,8 @@ const server = new ApolloServer({
 
 const PORT = process.env.PORT || 4000;
 
+// const isProduction = process.env.NODE_ENV === 'production';
+
 db.sequelize
   .sync()
   .then(() => {
