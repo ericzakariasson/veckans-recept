@@ -32,9 +32,9 @@ const customMedia = size => (...args) => css`
 export const theme = {
   main: '#11B270',
   rgba: {
-    main: opacity => `rgba(15, 153, 96, ${opacity / 100})`,
+    main: opacity => `rgba(17, 178, 112, ${opacity / 100})`,
   },
-  light: 'rgba(15, 153, 96, 0.10)',
+  light: `rgba(17, 178, 112, ${10 / 100})`,
   black: '#222',
   transition: '0.2s ease-in-out',
   maxWidth: '65rem',

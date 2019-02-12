@@ -6,11 +6,14 @@ import SwipeableViews from 'react-swipeable-views'
 import Day from './Day'
 import DayPlaceholder from './DayPlaceholder'
 import MailWeek from './MailWeek'
+import Pagination from './Pagination'
 
 const Wrapper = styled.div`
   max-width: ${p => p.theme.maxWidth};
   width: 100vw;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 const SwipeList = styled(SwipeableViews)`
@@ -23,7 +26,7 @@ const SwipeList = styled(SwipeableViews)`
 `
 
 const slideStyle = {
-  padding: '0 10px 20px 10px',
+  padding: '0 10px 5px',
   position: 'relative',
 }
 
@@ -34,6 +37,10 @@ const Days = ({
   activeIndex,
   createWeek,
 }) => {
+  const dayPages = recipes.map((_, i) => ({ number: i }))
+
+  const pages = [...dayPages, { number: recipes.length, last: true }]
+
   return (
     <Wrapper>
       {loading ? (
@@ -55,6 +62,7 @@ const Days = ({
           <MailWeek createWeek={createWeek} />
         </SwipeList>
       )}
+      <Pagination pages={pages} active={activeIndex} />
     </Wrapper>
   )
 }

@@ -142,15 +142,21 @@ const App = ({ client }) => {
       },
     }
 
+    const enabledNewDays = filterEnabled(newDays)
+
+    const isLastEnabledDay = enabledNewDays.length === 0
+
+    if (isLastEnabledDay) {
+      return
+    }
+
     setDays(newDays)
 
     const fetchOneMore = !day.enabled
 
     const equalIndex = d => d.index === dayIndex
 
-    const updatedEnabledDays = fetchOneMore
-      ? filterEnabled(newDays)
-      : enabledDays
+    const updatedEnabledDays = fetchOneMore ? enabledNewDays : enabledDays
 
     const index = updatedEnabledDays.findIndex(equalIndex)
 
@@ -212,7 +218,7 @@ const App = ({ client }) => {
       },
     }) */
 
-    popup({ props: { url: '/vecka/2' }, component: WeekCreatedMessage })
+    popup({ props: { id: 2 }, component: WeekCreatedMessage })
   }
 
   function isFrozen(index) {

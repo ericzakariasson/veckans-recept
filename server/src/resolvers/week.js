@@ -44,7 +44,7 @@ module.exports = {
       );
 
       return {
-        url: `/vecka/${week.id}`
+        id: `${week.id}`
       };
     }
   }

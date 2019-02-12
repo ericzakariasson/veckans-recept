@@ -1,8 +1,9 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-
 import { Share } from 'react-feather'
+
+import DaySelector from './DaySelector'
 
 const Fixed = styled.aside`
   position: fixed;
@@ -13,6 +14,13 @@ const Fixed = styled.aside`
   background: #fff;
   padding: 10px;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.04);
+  transition: ${p => p.theme.transition};
+
+  ${p =>
+    p.hide &&
+    css`
+      transform: translateY(100%);
+    `}
 `
 
 const MaxWidth = styled.div`
@@ -56,7 +64,6 @@ const DayIcon = styled.li`
 `
 
 const Button = styled.button`
-  background: ${p => p.theme.gradient};
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -88,17 +95,16 @@ const Button = styled.button`
 const ShareButton = styled(Button)`
   height: 40px;
   width: 40px;
-  border-radius: 50%;
+  border-radius: 5px;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: ${p => p.theme.main};
 
   svg {
     transform: translateY(-1px);
   }
-
-  opacity: ${p => (p.visible ? 1 : 0)};
   transition: ${p => p.theme.transition};
 `
 
@@ -125,9 +131,9 @@ const Bar = ({
   const shareIndex = enabledDays.length
 
   return (
-    <Fixed>
+    <Fixed hide={shareIndex === activeIndex}>
       <MaxWidth>
-        <DayList>
+        {/* <DayList>
           {days.map((day, i) => (
             <DayIcon
               key={day.name}
@@ -138,11 +144,13 @@ const Bar = ({
               {day.name.charAt(0)}
             </DayIcon>
           ))}
-        </DayList>
-        <ShareButton
-          visible={shareIndex !== activeIndex}
-          onClick={() => setActiveIndex(shareIndex)}
-        >
+        </DayList> */}
+        <DaySelector
+          toggle={toggle}
+          days={days}
+          activeDayName={activeDayName}
+        />
+        <ShareButton onClick={() => setActiveIndex(shareIndex)}>
           <Share size={18} color="#FFF" />
         </ShareButton>
         <ShuffleAll onClick={refetch}>Slumpa {daysToRefetch} recept</ShuffleAll>

@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isEmail: true
         }
+      },
+      createdAccount: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     },
     modelOptions

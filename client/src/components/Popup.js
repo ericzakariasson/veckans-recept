@@ -63,10 +63,10 @@ const Background = styled.div`
   left: 0;
 `
 
-export const WeekCreatedMessage = ({ url, closeToast }) => (
+export const WeekCreatedMessage = ({ id, closeToast }) => (
   <Wrapper>
     <Title>Din vecka är skickad</Title>
-    <Link to={url}>Visa vecka</Link>
+    <Link to={`/vecka/${id}`}>Visa vecka</Link>
     <Background onClick={closeToast} />
   </Wrapper>
 )

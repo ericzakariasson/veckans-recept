@@ -73,11 +73,12 @@ const Freeze = styled(Button)`
 
 const Replace = styled(Button)`
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
   transition: ${p => p.theme.transition};
+  color: ${p => p.theme.main};
 
   ${p =>
-    p.animate &&
+    false &&
     css`
       animation: ${spin} 0.4s ease-in-out;
     `}
@@ -88,10 +89,6 @@ const Replace = styled(Button)`
 
   &:active {
     transition: ${p => p.theme.transition};
-  }
-
-  svg {
-    color: ${p => p.theme.main};
   }
 `
 

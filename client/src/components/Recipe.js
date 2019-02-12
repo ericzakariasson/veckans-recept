@@ -11,9 +11,10 @@ export const Card = styled(animated.div)`
   transition: ${p => p.theme.transition};
   flex: 1;
   overflow: hidden;
-  margin-bottom: 20px;
   position: relative;
   background: #fff;
+  margin-bottom: 15px;
+  height: 100%;
 `
 
 const Inner = styled(animated.div)`
@@ -59,9 +60,10 @@ const Content = styled.div`
 `
 
 const Title = styled.h1`
-  font-size: 1.3em;
+  font-size: 1.5em;
   font-family: ${p => p.theme.fonts.body};
   font-weight: 600;
+  line-height: 1.125;
   margin-bottom: 1rem;
 
   ${p => p.theme.media.mobile.up`
@@ -78,6 +80,7 @@ const Info = styled.li`
   /* color: ${p => p.theme.main}; */
   color: #777;
   font-weight: 700;
+  font-size: 1rem;
 
   &:not(:last-of-type) {
     margin-right: 0.5rem;

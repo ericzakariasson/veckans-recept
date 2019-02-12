@@ -5,9 +5,10 @@ import { useTransition, animated } from 'react-spring'
 
 export const Name = styled(animated.span)`
   margin-bottom: 1rem;
-  color: #999;
+  color: #717775;
   text-transform: uppercase;
   font-weight: 600;
+  letter-spacing: 0.1em;
 `
 
 const Day = ({ day }) => {
