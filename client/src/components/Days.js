@@ -5,7 +5,7 @@ import SwipeableViews from 'react-swipeable-views'
 
 import Day from './Day'
 import DayPlaceholder from './DayPlaceholder'
-import MailWeek from './MailWeek'
+import SaveWeek from './SaveWeek'
 import Pagination from './Pagination'
 
 const Wrapper = styled.div`
@@ -59,7 +59,7 @@ const Days = ({
               frozen={recipe.frozen}
             />
           ))}
-          <MailWeek createWeek={createWeek} />
+          <SaveWeek createWeek={createWeek} />
         </SwipeList>
       )}
       <Pagination pages={pages} active={activeIndex} />

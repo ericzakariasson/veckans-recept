@@ -8,7 +8,6 @@ import { popup, PopupContainer, WeekCreatedMessage } from './Popup'
 import Header from '../components/Header'
 import Days from '../components/Days'
 import Bar from '../components/Bar'
-import MailWeek from '../components/MailWeek'
 
 import { WEEK_DAYS as initialDays } from '../constanst'
 

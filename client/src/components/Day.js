@@ -3,9 +3,16 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { animated, useTransition } from 'react-spring'
 
-import DayName from './DayName'
 import Recipe from './Recipe'
 import RecipeActions from './RecipeActions'
+
+export const Label = styled(animated.span)`
+  margin-bottom: 1rem;
+  color: #717775;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+`
 
 export const Wrapper = styled.article`
   display: flex;
@@ -15,10 +22,12 @@ export const Wrapper = styled.article`
   height: 100%;
 `
 
+const Name = Label
+
 const Day = ({ style, day, frozen, recipe }) => {
   return (
     <Wrapper style={style}>
-      <DayName day={day} />
+      <Name>{day.name}</Name>
       <Recipe frozen={recipe.frozen} recipe={recipe} />
       <RecipeActions
         frozen={frozen}

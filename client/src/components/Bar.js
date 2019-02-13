@@ -124,10 +124,7 @@ const Bar = ({
   activeIndex,
   share,
 }) => {
-  const activeDayName = enabledDays[activeIndex]
-    ? enabledDays[activeIndex].name
-    : ''
-
+  const currentDay = enabledDays[activeIndex] ? enabledDays[activeIndex] : null
   const shareIndex = enabledDays.length
 
   return (
@@ -145,11 +142,7 @@ const Bar = ({
             </DayIcon>
           ))}
         </DayList> */}
-        <DaySelector
-          toggle={toggle}
-          days={days}
-          activeDayName={activeDayName}
-        />
+        <DaySelector toggle={toggle} days={days} currentDay={currentDay} />
         <ShareButton onClick={() => setActiveIndex(shareIndex)}>
           <Share size={18} color="#FFF" />
         </ShareButton>
