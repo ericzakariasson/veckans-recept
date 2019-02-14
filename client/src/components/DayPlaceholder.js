@@ -6,6 +6,7 @@ import { Button } from './RecipeActions'
 
 const WrapperPlaceholder = styled(Wrapper)`
   padding: 0 20px 20px;
+  margin-top: 80px;
 `
 
 const DayNamePlaceholder = styled.div`

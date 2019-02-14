@@ -6,12 +6,13 @@ import { Share } from 'react-feather'
 import DaySelector from './DaySelector'
 
 const Fixed = styled.aside`
-  position: fixed;
+  position: absolute;
   z-index: 1;
   bottom: 0;
   left: 0;
   width: 100%;
   background: #fff;
+  height: ${p => p.theme.barHeight};
   padding: 10px;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.04);
   transition: ${p => p.theme.transition};

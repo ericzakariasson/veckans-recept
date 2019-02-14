@@ -20,15 +20,22 @@ export const Wrapper = styled.article`
   align-items: center;
   flex: 1 0 auto;
   height: 100%;
+  justify-content: space-between;
 `
 
 const Name = Label
 
-const Day = ({ style, day, frozen, recipe }) => {
+const Day = ({ style, day, frozen, recipe, maximize, maximized, i }) => {
   return (
     <Wrapper style={style}>
       <Name>{day.name}</Name>
-      <Recipe frozen={recipe.frozen} recipe={recipe} />
+      <Recipe
+        frozen={recipe.frozen}
+        recipe={recipe}
+        maximize={maximize}
+        maximized={maximized}
+        i={i}
+      />
       <RecipeActions
         frozen={frozen}
         replace={recipe.replace}

@@ -1,20 +1,29 @@
-import React from 'react'
-import styled from 'styled-components'
-import { useTransition, animated, config } from 'react-spring'
+import React, { useRef } from 'react'
+import { useWindowSize } from '../hooks/windowSize'
+import styled, { css } from 'styled-components'
+import { useTransition, useSpring, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
 export const Card = styled(animated.div)`
-  border-radius: 10px;
   background: #fff;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-  width: 100%;
-  transition: ${p => p.theme.transition};
   flex: 1;
   overflow: hidden;
-  position: relative;
+  position: absolute;
   background: #fff;
-  margin-bottom: 15px;
-  height: 100%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+  border-radius: ${p => (p.maximized ? 0 : '10px')};
+  z-index: ${p => (p.maximized ? 10 : 1)};
+
+  /* &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    box-shadow: inset 0px 4px 16px rgba(0, 0, 0, 0.16);
+  } */
 `
 
 const Inner = styled(animated.div)`
@@ -36,6 +45,7 @@ const Image = styled.div`
   background-color: #eee;
   width: 100%;
   flex: 1;
+  max-height: 50vh;
 
   &::before {
     content: '';
@@ -48,6 +58,8 @@ const Image = styled.div`
     background: #fff;
     transform: translate(-50%, -15%);
   }
+
+  ${p => p.maximized && css``}
 `
 
 const Content = styled.div`
@@ -96,18 +108,46 @@ const Info = styled.li`
   }
 `
 
-const Recipe = ({ frozen, recipe }) => {
+const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
+  const ref = useRef(null)
+
   const transition = useTransition(recipe, recipe.id, {
-    from: { transform: `rotate(-10deg)` },
+    from: { transform: `rotate(-15deg)` },
     enter: { transform: `rotate(0deg)` },
-    leave: { transform: `rotate(10deg)` },
+    leave: { transform: `rotate(15deg)` },
     unique: true,
     initial: false,
     config: config.stiff,
   })
 
+  const { width: innerWidth, height: innerHeight } = useWindowSize()
+
+  const top = 114
+  const width = innerWidth - 60
+  const height = innerHeight - (70 + 38 + 48 + 15 + top)
+
+  const [style, set] = useSpring(() => ({
+    width,
+    height,
+    top,
+  }))
+
+  set({
+    width: maximized ? innerWidth : width,
+    height: maximized ? innerHeight : height,
+    top: maximized ? 0 : top,
+  })
+
+  const isMaximized = maximized ? 'true' : undefined
+
   return (
-    <Card frozen={frozen.toString()}>
+    <Card
+      maximized={isMaximized}
+      style={style}
+      onClick={() => maximize(recipe.id)}
+      frozen={frozen.toString()}
+      ref={ref}
+    >
       {transition.map(
         ({
           item: { image, title, time, difficulty, numberOfIngredients },
@@ -115,7 +155,7 @@ const Recipe = ({ frozen, recipe }) => {
           key,
         }) => (
           <Inner key={key} style={props}>
-            <Image url={image} />
+            <Image maximized={isMaximized} url={image} />
             <Content>
               <Title>{title}</Title>
               <InfoList>

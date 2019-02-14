@@ -53,9 +53,9 @@ const IconWrapper = styled.div`
 
 const DaySelectorPopup = ({ open, toggle, days, currentDay }) => {
   const transition = useTransition(open, null, {
-    from: { opacity: 0, transform: 'rotateX(-10deg) scale3d(1,0.95,1)' },
-    enter: { opacity: 1, transform: 'rotateX(0deg) scale3d(1,1,1)' },
-    leave: { opacity: 0, transform: 'rotateX(-10deg) scale3d(1,0.95,1)' },
+    from: { opacity: 0, transform: 'rotateX(-15deg) translateY(10px)' },
+    enter: { opacity: 1, transform: 'rotateX(0deg) translateY(0px)' },
+    leave: { opacity: 0, transform: 'rotateX(-15deg) translateY(10px)' },
     config: { ...config.stiff, tension: 300 },
   })
 

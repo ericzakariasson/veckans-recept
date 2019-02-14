@@ -8,15 +8,14 @@ import { popup, PopupContainer, WeekCreatedMessage } from './Popup'
 import Header from '../components/Header'
 import Days from '../components/Days'
 import Bar from '../components/Bar'
+import Pagination from '../components/Pagination'
 
 import { WEEK_DAYS as initialDays } from '../constanst'
 
 const Wrapper = styled.div`
-  padding: 30px 0;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-bottom: 60px;
   background: #fcfcfc;
 `
 
@@ -246,6 +245,13 @@ const App = ({ client }) => {
     )
   }
 
+  const dayPages = recipes.map((_, i) => ({ number: i }))
+
+  const pages = [
+    ...dayPages,
+    { number: recipes.length, last: true }, // Last page
+  ]
+
   return (
     <Wrapper>
       <PopupContainer />
@@ -259,6 +265,7 @@ const App = ({ client }) => {
         activeIndex={activeIndex}
         createWeek={createWeek}
       />
+      <Pagination pages={pages} active={activeIndex} />
       <Bar
         setActiveIndex={setActiveIndex}
         activeIndex={activeIndex}

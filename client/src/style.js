@@ -38,6 +38,7 @@ export const theme = {
   black: '#222',
   transition: '0.2s ease-in-out',
   maxWidth: '65rem',
+  barHeight: '70px',
   gradient: `linear-gradient(180deg, #11B270 0%, #10A668 100%);`,
   fonts: {
     display: 'Playfair Display',

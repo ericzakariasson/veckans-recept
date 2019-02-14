@@ -7,6 +7,10 @@ const Wrapper = styled.ul`
   width: 100%;
   justify-content: center;
   padding: 15px 0;
+  position: absolute;
+  left: 50%;
+  bottom: ${p => p.theme.barHeight};
+  transform: translateX(-50%);
 `
 
 const Dot = styled.li`

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import SwipeableViews from 'react-swipeable-views'
@@ -19,15 +19,17 @@ const Wrapper = styled.div`
 const SwipeList = styled(SwipeableViews)`
   height: 100%;
   padding: 0 20px;
+  z-index: 10;
 
   .react-swipeable-view-container {
     height: 100%;
+    padding-top: 80px;
+    padding-bottom: 103px;
   }
 `
 
 const slideStyle = {
   padding: '0 10px 5px',
-  position: 'relative',
 }
 
 const Days = ({
@@ -37,9 +39,13 @@ const Days = ({
   activeIndex,
   createWeek,
 }) => {
-  const dayPages = recipes.map((_, i) => ({ number: i }))
+  const [selected, setSelected] = useState('')
 
-  const pages = [...dayPages, { number: recipes.length, last: true }]
+  function select(id) {
+    setSelected(selected === id ? '' : id)
+  }
+
+  const isSelected = selected !== ''
 
   return (
     <Wrapper>
@@ -50,19 +56,22 @@ const Days = ({
           onChangeIndex={i => setActiveIndex(i)}
           index={activeIndex}
           slideStyle={slideStyle}
+          disabled={isSelected}
         >
-          {recipes.map(recipe => (
+          {recipes.map((recipe, i) => (
             <Day
               key={recipe.day.index}
               day={recipe.day}
               recipe={recipe}
               frozen={recipe.frozen}
+              maximize={select}
+              maximized={selected === recipe.id}
+              i={i}
             />
           ))}
           <SaveWeek createWeek={createWeek} />
         </SwipeList>
       )}
-      <Pagination pages={pages} active={activeIndex} />
     </Wrapper>
   )
 }
