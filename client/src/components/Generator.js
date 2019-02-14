@@ -36,7 +36,7 @@ const TryAgain = styled.p`
 `
 
 const QUERY_RECIPES = gql`
-  query RandomRecipes($limit: Int!, $ids: [Int]!) {
+  query GetRandomRecipes($limit: Int!, $ids: [Int]!) {
     randomRecipes(limit: $limit, ids: $ids) {
       id
       title
@@ -44,6 +44,32 @@ const QUERY_RECIPES = gql`
       time
       difficulty
       numberOfIngredients
+    }
+  }
+`
+
+const QUERY_RECIPE = gql`
+  query GetRecipe($id: ID!) {
+    recipe(id: $id) {
+      id
+      title
+      image
+      time
+      difficulty
+      numberOfIngredients
+      sections {
+        name
+        order
+        ingredients {
+          item {
+            name
+          }
+          amount
+          unit {
+            short
+          }
+        }
+      }
     }
   }
 `
@@ -106,6 +132,22 @@ const App = ({ client }) => {
         index,
       })),
     }
+  }
+
+  async function fetchRecipe(id) {
+    const { data } = await client.query({
+      query: QUERY_RECIPE,
+      variables: { id },
+    })
+
+    console.log(data)
+
+    const { recipe } = data
+    const index = recipes.findIndex(r => r.id === id)
+
+    const updatedRecipes = Object.assign([], recipes, { [index]: recipe })
+
+    setRecipes(updatedRecipes)
   }
 
   async function initialFetch() {
@@ -219,6 +261,8 @@ const App = ({ client }) => {
     popup({ props: { id: 2 }, component: WeekCreatedMessage })
   }
 
+  function fetchFull(id) {}
+
   function isFrozen(index) {
     return enabledDays[index] ? days[index].frozen : false
   }
@@ -264,6 +308,7 @@ const App = ({ client }) => {
         setActiveIndex={setActiveIndex}
         activeIndex={activeIndex}
         createWeek={createWeek}
+        fetchRecipe={fetchRecipe}
       />
       <Pagination pages={pages} active={activeIndex} />
       <Bar

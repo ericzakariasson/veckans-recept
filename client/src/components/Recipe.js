@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useWindowSize } from '../hooks/windowSize'
+import { useWindowSize, useMeasure } from '../hooks'
 import styled, { css } from 'styled-components'
 import { useTransition, useSpring, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
@@ -8,6 +8,7 @@ export const Card = styled(animated.div)`
   background: #fff;
   flex: 1;
   overflow: hidden;
+  overflow-y: auto;
   position: absolute;
   background: #fff;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
@@ -108,13 +109,29 @@ const Info = styled.li`
   }
 `
 
+const Fullscreen = styled(animated.div)`
+  padding: 20px;
+`
+
+const FullscreenContent = styled.div``
+
+const IngredientsTitle = styled.h2``
+
+const Section = styled.article``
+
+const SectionName = styled.h3``
+
+const Ingredients = styled.ul``
+
+const Ingredient = styled.li``
+
 const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
   const ref = useRef(null)
 
   const transition = useTransition(recipe, recipe.id, {
-    from: { transform: `rotate(-15deg)` },
-    enter: { transform: `rotate(0deg)` },
-    leave: { transform: `rotate(15deg)` },
+    from: { opacity: 0, transform: `rotate(-15deg)` },
+    enter: { opacity: 1, transform: `rotate(0deg)` },
+    leave: { opacity: 0, transform: `rotate(15deg)` },
     unique: true,
     initial: false,
     config: config.stiff,
@@ -140,6 +157,14 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
 
   const isMaximized = maximized ? 'true' : undefined
 
+  const [bind, { height: fullScreenHeight }] = useMeasure()
+
+  const fullRecipe = useTransition(maximized, null, {
+    from: { opacity: 0, height: 0, padding: '0 20px' },
+    enter: { opacity: 1, height: fullScreenHeight, padding: '20px 20px' },
+    leave: { opacity: 0, height: 0, padding: '0 20px' },
+  })
+
   return (
     <Card
       maximized={isMaximized}
@@ -164,6 +189,32 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
                 <Info>{numberOfIngredients} ingredienser</Info>
               </InfoList>
             </Content>
+            {fullRecipe.map(
+              ({
+                item: isFullscreen,
+                props: fullScreenProps,
+                key: fullscreenKey,
+              }) =>
+                isFullscreen && (
+                  <Fullscreen style={fullScreenProps} key={fullscreenKey}>
+                    <FullscreenContent {...bind}>
+                      <IngredientsTitle>Ingredienser</IngredientsTitle>
+                      {recipe.sections.map(section => (
+                        <Section>
+                          {section.name && (
+                            <SectionName>{section.name}</SectionName>
+                          )}
+                          <Ingredients>
+                            {section.ingredients.map(ingredient => (
+                              <Ingredient>{ingredient.item.name}</Ingredient>
+                            ))}
+                          </Ingredients>
+                        </Section>
+                      ))}
+                    </FullscreenContent>
+                  </Fullscreen>
+                )
+            )}
           </Inner>
         )
       )}

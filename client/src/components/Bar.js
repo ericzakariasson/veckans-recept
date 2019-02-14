@@ -7,7 +7,7 @@ import DaySelector from './DaySelector'
 
 const Fixed = styled.aside`
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   bottom: 0;
   left: 0;
   width: 100%;

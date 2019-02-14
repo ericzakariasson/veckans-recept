@@ -27,8 +27,8 @@ module.exports = gql`
   }
 
   type Section {
-    name: String!
-    order: Int
+    name: String
+    order: Int!
     ingredients: [Ingredient]!
   }
 

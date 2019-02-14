@@ -38,11 +38,17 @@ const Days = ({
   setActiveIndex,
   activeIndex,
   createWeek,
+  fetchRecipe,
 }) => {
   const [selected, setSelected] = useState('')
 
-  function select(id) {
-    setSelected(selected === id ? '' : id)
+  async function select(id) {
+    const deselect = selected === id
+    if (!deselect) {
+      await fetchRecipe(id)
+    }
+
+    setSelected(deselect ? '' : id)
   }
 
   const isSelected = selected !== ''
