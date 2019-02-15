@@ -4,6 +4,10 @@ import styled, { css } from 'styled-components'
 import { useTransition, useSpring, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
+import { X } from 'react-feather'
+
+import FullRecipe from './FullRecipe'
+
 export const Card = styled(animated.div)`
   background: #fff;
   flex: 1;
@@ -11,11 +15,15 @@ export const Card = styled(animated.div)`
   overflow-y: auto;
   position: absolute;
   background: #fff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
   border-radius: ${p => (p.maximized ? 0 : '10px')};
-  z-index: ${p => (p.maximized ? 10 : 1)};
+  z-index: ${p => (p.maximized ? 11 : 1)};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
 
-  /* &::before {
+  /* 
+
+  INSET
+  
+  &::before {
     content: '';
     position: absolute;
     top: 0;
@@ -24,7 +32,8 @@ export const Card = styled(animated.div)`
     height: 100%;
     z-index: 10;
     box-shadow: inset 0px 4px 16px rgba(0, 0, 0, 0.16);
-  } */
+  } 
+  */
 `
 
 const Inner = styled(animated.div)`
@@ -86,6 +95,30 @@ const Title = styled.h1`
   `}
 `
 
+const Minimize = styled.button`
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.08);
+  background: #222;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: ${p => p.theme.transition};
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  ${p =>
+    p.minimized &&
+    css`
+      transform: translate(15px, -80px);
+    `}
+`
+
 const InfoList = styled.ul``
 
 const Info = styled.li`
@@ -108,22 +141,6 @@ const Info = styled.li`
     }
   }
 `
-
-const Fullscreen = styled(animated.div)`
-  padding: 20px;
-`
-
-const FullscreenContent = styled.div``
-
-const IngredientsTitle = styled.h2``
-
-const Section = styled.article``
-
-const SectionName = styled.h3``
-
-const Ingredients = styled.ul``
-
-const Ingredient = styled.li``
 
 const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
   const ref = useRef(null)
@@ -169,10 +186,13 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
     <Card
       maximized={isMaximized}
       style={style}
-      onClick={() => maximize(recipe.id)}
+      onClick={() => (isMaximized ? undefined : maximize(recipe.id))}
       frozen={frozen.toString()}
       ref={ref}
     >
+      <Minimize minimized={!isMaximized} onClick={() => maximize(recipe.id)}>
+        <X color="#FFF" />
+      </Minimize>
       {transition.map(
         ({
           item: { image, title, time, difficulty, numberOfIngredients },
@@ -196,23 +216,14 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
                 key: fullscreenKey,
               }) =>
                 isFullscreen && (
-                  <Fullscreen style={fullScreenProps} key={fullscreenKey}>
-                    <FullscreenContent {...bind}>
-                      <IngredientsTitle>Ingredienser</IngredientsTitle>
-                      {recipe.sections.map(section => (
-                        <Section>
-                          {section.name && (
-                            <SectionName>{section.name}</SectionName>
-                          )}
-                          <Ingredients>
-                            {section.ingredients.map(ingredient => (
-                              <Ingredient>{ingredient.item.name}</Ingredient>
-                            ))}
-                          </Ingredients>
-                        </Section>
-                      ))}
-                    </FullscreenContent>
-                  </Fullscreen>
+                  <FullRecipe
+                    key={fullscreenKey}
+                    style={fullScreenProps}
+                    bind={bind}
+                    sections={recipe.sections}
+                    description={recipe.description}
+                    instructions={recipe.instructions}
+                  />
                 )
             )}
           </Inner>

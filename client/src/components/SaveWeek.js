@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import Ink from 'react-ink'
 import { MessageCircle, Link2 } from 'react-feather'
 
-import { Label } from './Day'
+import { Label } from './Label'
 
 const Wrapper = styled.div`
   display: flex;

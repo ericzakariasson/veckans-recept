@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 const SwipeList = styled(SwipeableViews)`
   height: 100%;
   padding: 0 20px;
-  z-index: 10;
+  z-index: 11;
 
   .react-swipeable-view-container {
     height: 100%;
@@ -39,6 +39,7 @@ const Days = ({
   activeIndex,
   createWeek,
   fetchRecipe,
+  children,
 }) => {
   const [selected, setSelected] = useState('')
 
@@ -78,6 +79,7 @@ const Days = ({
           <SaveWeek createWeek={createWeek} />
         </SwipeList>
       )}
+      {children}
     </Wrapper>
   )
 }

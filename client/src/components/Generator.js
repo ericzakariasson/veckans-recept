@@ -57,8 +57,12 @@ const QUERY_RECIPE = gql`
       time
       difficulty
       numberOfIngredients
+      description
+      instructions {
+        step
+        text
+      }
       sections {
-        name
         order
         ingredients {
           item {
@@ -309,17 +313,18 @@ const App = ({ client }) => {
         activeIndex={activeIndex}
         createWeek={createWeek}
         fetchRecipe={fetchRecipe}
-      />
-      <Pagination pages={pages} active={activeIndex} />
-      <Bar
-        setActiveIndex={setActiveIndex}
-        activeIndex={activeIndex}
-        days={dayArray}
-        enabledDays={enabledDays}
-        toggle={toggleEnabled}
-        refetch={refetchNotFrozen}
-        daysToRefetch={enabledAndNotFrozen.length}
-      />
+      >
+        <Pagination pages={pages} active={activeIndex} />
+        <Bar
+          setActiveIndex={setActiveIndex}
+          activeIndex={activeIndex}
+          days={dayArray}
+          enabledDays={enabledDays}
+          toggle={toggleEnabled}
+          refetch={refetchNotFrozen}
+          daysToRefetch={enabledAndNotFrozen.length}
+        />
+      </Days>
     </Wrapper>
   )
 }

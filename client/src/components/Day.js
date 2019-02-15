@@ -6,13 +6,7 @@ import { animated, useTransition } from 'react-spring'
 import Recipe from './Recipe'
 import RecipeActions from './RecipeActions'
 
-export const Label = styled(animated.span)`
-  margin-bottom: 1rem;
-  color: #717775;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-`
+import { Label } from './Label'
 
 export const Wrapper = styled.article`
   display: flex;
