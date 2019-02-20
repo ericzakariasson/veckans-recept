@@ -9,17 +9,20 @@ import { theme } from './style'
 import Admin from './admin'
 import Generator from './components/Generator'
 import Week from './components/Week'
+import Layout from './components/Layout'
 
 const App = () => (
   <ApolloProvider client={client}>
     <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          {/* <Route path="/admin" component={Admin} /> */}
-          <Route path="/vecka/:id" component={Week} />
-          <Route path="/" component={Generator} />
-        </Switch>
-      </Router>
+      <Layout>
+        <Router>
+          <Switch>
+            {/* <Route path="/admin" component={Admin} /> */}
+            <Route path="/vecka/:id" component={Week} />
+            <Route path="/" component={Generator} />
+          </Switch>
+        </Router>
+      </Layout>
     </ThemeProvider>
   </ApolloProvider>
 )

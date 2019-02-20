@@ -1,5 +1,3 @@
-// const { literal, Op } = require('sequelize');
-
 const weekOptions = models => ({
   include: [{ model: models.WeekRecipe, as: 'recipes' }],
   order: [[{ model: models.WeekRecipe, as: 'recipes' }, 'order', 'ASC']]
@@ -8,9 +6,8 @@ const weekOptions = models => ({
 module.exports = {
   Query: {
     week: async (parent, { id }, { models }) => {
-      const w = await models.Week.findByPk(id, weekOptions(models));
-
-      return w;
+      const options = weekOptions(models);
+      return models.Week.findByPk(id, options);
     },
     weeks: async (parent, _, { models }) => {
       return models.Week.findAll(weekOptions(models));

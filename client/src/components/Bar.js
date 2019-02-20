@@ -7,7 +7,7 @@ import DaySelector from './DaySelector'
 
 const Fixed = styled.aside`
   position: absolute;
-  z-index: 10;
+  z-index: 11;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -124,12 +124,15 @@ const Bar = ({
   setActiveIndex,
   activeIndex,
   share,
+  isSelected,
 }) => {
   const currentDay = enabledDays[activeIndex] ? enabledDays[activeIndex] : null
   const shareIndex = enabledDays.length
 
+  const hide = shareIndex === activeIndex || isSelected
+
   return (
-    <Fixed hide={shareIndex === activeIndex}>
+    <Fixed hide={hide}>
       <MaxWidth>
         {/* <DayList>
           {days.map((day, i) => (

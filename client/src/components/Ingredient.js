@@ -27,7 +27,7 @@ const Ingredient = ({ item, amount, unit }) => {
   return (
     <Wrapper>
       <X>
-        <Amount>{amount}</Amount>
+        {amount > 0 && <Amount>{amount}</Amount>}
         <Unit>{unit ? unit.short : null}</Unit>
       </X>
       <Item>{item.name}</Item>

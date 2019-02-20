@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 const SwipeList = styled(SwipeableViews)`
   height: 100%;
   padding: 0 20px;
-  z-index: 11;
+  z-index: 10;
 
   .react-swipeable-view-container {
     height: 100%;
@@ -40,9 +40,9 @@ const Days = ({
   createWeek,
   fetchRecipe,
   children,
+  selected,
+  setSelected,
 }) => {
-  const [selected, setSelected] = useState('')
-
   async function select(id) {
     const deselect = selected === id
     if (!deselect) {

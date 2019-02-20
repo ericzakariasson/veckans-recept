@@ -103,6 +103,7 @@ const App = ({ client }) => {
   const [recipes, setRecipes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selected, setSelected] = useState('')
 
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -313,12 +314,15 @@ const App = ({ client }) => {
         activeIndex={activeIndex}
         createWeek={createWeek}
         fetchRecipe={fetchRecipe}
+        selected={selected}
+        setSelected={setSelected}
       >
         <Pagination pages={pages} active={activeIndex} />
         <Bar
           setActiveIndex={setActiveIndex}
           activeIndex={activeIndex}
           days={dayArray}
+          isSelected={selected !== ''}
           enabledDays={enabledDays}
           toggle={toggleEnabled}
           refetch={refetchNotFrozen}
