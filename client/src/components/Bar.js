@@ -32,38 +32,6 @@ const MaxWidth = styled.div`
   justify-content: space-between;
 `
 
-const DayList = styled.ul`
-  display: flex;
-  list-style: none;
-`
-
-const DayIcon = styled.li`
-  padding: 5px;
-  text-transform: uppercase;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: ${p => p.theme.transition};
-
-  background: ${p => (p.enabled ? p.theme.rgba.main(80) : p.theme.light)};
-  color: ${p => (p.enabled ? '#FFF' : p.theme.main)};
-
-  ${p =>
-    p.active &&
-    css`
-      transform: translateY(-2px);
-    `}
-
-  &:not(:last-of-type) {
-    margin-right: 5px;
-  }
-`
-
 const Button = styled.button`
   color: #fff;
   border: none;
@@ -123,29 +91,16 @@ const Bar = ({
   daysToRefetch,
   setActiveIndex,
   activeIndex,
-  share,
   isSelected,
 }) => {
   const currentDay = enabledDays[activeIndex] ? enabledDays[activeIndex] : null
-  const shareIndex = enabledDays.length
+  const shareIndex = enabledDays.length //Last, after all enabled days
 
   const hide = shareIndex === activeIndex || isSelected
 
   return (
     <Fixed hide={hide}>
       <MaxWidth>
-        {/* <DayList>
-          {days.map((day, i) => (
-            <DayIcon
-              key={day.name}
-              onClick={() => toggle(day.index)}
-              enabled={day.enabled}
-              active={day.name === activeDayName}
-            >
-              {day.name.charAt(0)}
-            </DayIcon>
-          ))}
-        </DayList> */}
         <DaySelector toggle={toggle} days={days} currentDay={currentDay} />
         <ShareButton onClick={() => setActiveIndex(shareIndex)}>
           <Share size={18} color="#FFF" />

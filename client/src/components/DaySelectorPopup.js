@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useTransition, animated, config, useTrail } from 'react-spring'
+import { useTransition, animated, config } from 'react-spring'
 import { Check } from 'react-feather'
 
 const Popup = styled(animated.div)`

@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { animated, useTransition } from 'react-spring'
 
 import Recipe from './Recipe'
 import RecipeActions from './RecipeActions'
@@ -19,7 +18,16 @@ export const Wrapper = styled.article`
 
 const Name = Label
 
-const Day = ({ style, day, frozen, recipe, maximize, maximized, i }) => {
+const Day = ({
+  style,
+  day,
+  frozen,
+  recipe,
+  maximize,
+  maximized,
+  i,
+  windowSize,
+}) => {
   return (
     <Wrapper style={style}>
       <Name>{day.name}</Name>
@@ -29,6 +37,7 @@ const Day = ({ style, day, frozen, recipe, maximize, maximized, i }) => {
         maximize={maximize}
         maximized={maximized}
         i={i}
+        windowSize={windowSize}
       />
       <RecipeActions
         frozen={frozen}

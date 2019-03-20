@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Ink from 'react-ink'
-import { MessageCircle, Link2 } from 'react-feather'
+// import { MessageCircle, Link2 } from 'react-feather'
 
 import { Label } from './Label'
 
@@ -94,11 +94,11 @@ const Area = styled.article`
   }
 `
 
-const Providers = styled.ul`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`
+// const Providers = styled.ul`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+// `
 
 /* eslint-disable */
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ /* eslint-ignore */
@@ -116,13 +116,13 @@ const SaveWeek = ({ createWeek }) => {
     createWeek(email)
   }
 
-  function openSms() {
-    const body =
-      'Hej! Här kommer dina recept för veckan.\nhttps://veckansrecept.nu/vecka/2'
-    const sms = `sms:${' '}&body=${encodeURI(body)}`
+  // function openSms() {
+  //   const body =
+  //     'Hej! Här kommer dina recept för veckan.\nhttps://veckansrecept.nu/vecka/2'
+  //   const sms = `sms:${' '}&body=${encodeURI(body)}`
 
-    window.location.href = sms
-  }
+  //   window.location.href = sms
+  // }
 
   const isValid = EMAIL_REGEX.test(email)
 
@@ -144,13 +144,13 @@ const SaveWeek = ({ createWeek }) => {
           </SendButton>
         </Form>
       </Area>
-      <Area>
+      {/* <Area>
         <Label>Dela</Label>
         <Providers>
           <Provider icon={Link2} text="Kopiera länk" />
           <Provider icon={MessageCircle} text="SMS" onClick={openSms} />
         </Providers>
-      </Area>
+      </Area> */}
     </Wrapper>
   )
 }
@@ -158,7 +158,7 @@ const SaveWeek = ({ createWeek }) => {
 SaveWeek.propTypes = {
   createWeek: PropTypes.func,
 }
-
+/*
 const Card = styled.li`
   background: #fff;
   padding: 5px;
@@ -194,6 +194,7 @@ const Provider = ({ icon: Icon, text, onClick }) => (
     </IconWrapper>
     <Text>{text}</Text>
   </Card>
-)
+) 
+*/
 
 export default SaveWeek

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { ChevronDown, Check } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import Ink from 'react-ink'
 
 import DaySelectorPopup from './DaySelectorPopup'

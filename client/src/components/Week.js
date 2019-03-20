@@ -114,4 +114,8 @@ const Week = ({ match }) => {
   )
 }
 
+Week.propTypes = {
+  match: PropTypes.any,
+}
+
 export default Week

@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { client } from './apollo'
 import { theme } from './style'
 
-import Admin from './admin'
+// import Admin from './admin'
 import Generator from './components/Generator'
 import Week from './components/Week'
 import Layout from './components/Layout'

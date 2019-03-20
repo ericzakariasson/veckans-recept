@@ -16,7 +16,7 @@ const Content = styled.div`
 `
 
 const Description = styled.p`
-  line-height: 1.25;
+  line-height: 1.5;
   font-size: 1rem;
   margin-bottom: 40px;
 `

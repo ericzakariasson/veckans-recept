@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { useWindowSize, useMeasure } from '../hooks'
+import React from 'react'
+import { useMeasure } from '../hooks'
 import styled, { css } from 'styled-components'
 import { useTransition, useSpring, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
@@ -142,8 +142,8 @@ const Info = styled.li`
   }
 `
 
-const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
-  const ref = useRef(null)
+const Recipe = ({ frozen, maximize, maximized, i, recipe, windowSize }) => {
+  const isMaximized = maximized ? 'true' : undefined
 
   const transition = useTransition(recipe, recipe.id, {
     from: { opacity: 0, transform: `rotate(-15deg)` },
@@ -154,25 +154,27 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
     config: config.stiff,
   })
 
-  const { width: innerWidth, height: innerHeight } = useWindowSize()
-
   const top = 114
-  const width = innerWidth - 60
-  const height = innerHeight - (70 + 38 + 48 + 15 + top)
+  const width = windowSize.width - 60
+  const height = windowSize.height - (70 + 38 + 48 + 15 + top)
 
-  const [style, set] = useSpring(() => ({
+  const defaultStyle = {
     width,
     height,
     top,
-  }))
+  }
 
-  set({
-    width: maximized ? innerWidth : width,
-    height: maximized ? innerHeight : height,
-    top: maximized ? 0 : top,
-  })
+  const [style, set] = useSpring(() => ({ ...defaultStyle }))
 
-  const isMaximized = maximized ? 'true' : undefined
+  if (isMaximized) {
+    set({
+      width: windowSize.width,
+      height: windowSize.height,
+      top: 0,
+    })
+  } else {
+    set({ ...defaultStyle })
+  }
 
   const [bind, { height: fullScreenHeight }] = useMeasure()
 
@@ -184,15 +186,15 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
 
   return (
     <Card
-      maximized={isMaximized}
       style={style}
+      maximized={isMaximized}
       onClick={() => (isMaximized ? undefined : maximize(recipe.id))}
       frozen={frozen.toString()}
-      ref={ref}
     >
       <Minimize minimized={!isMaximized} onClick={() => maximize(recipe.id)}>
         <X color="#FFF" />
       </Minimize>
+      hej
       {transition.map(
         ({
           item: { image, title, time, difficulty, numberOfIngredients },
@@ -218,8 +220,8 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe }) => {
                 isFullscreen && (
                   <FullRecipe
                     key={fullscreenKey}
-                    style={fullScreenProps}
                     bind={bind}
+                    style={fullScreenProps}
                     sections={recipe.sections}
                     description={recipe.description}
                     instructions={recipe.instructions}

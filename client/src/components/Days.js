@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import SwipeableViews from 'react-swipeable-views'
@@ -6,7 +6,7 @@ import SwipeableViews from 'react-swipeable-views'
 import Day from './Day'
 import DayPlaceholder from './DayPlaceholder'
 import SaveWeek from './SaveWeek'
-import Pagination from './Pagination'
+import { useWindowSize } from '../hooks'
 
 const Wrapper = styled.div`
   max-width: ${p => p.theme.maxWidth};
@@ -53,6 +53,7 @@ const Days = ({
   }
 
   const isSelected = selected !== ''
+  const windowSize = useWindowSize()
 
   return (
     <Wrapper>
@@ -74,6 +75,7 @@ const Days = ({
               maximize={select}
               maximized={selected === recipe.id}
               i={i}
+              windowSize={windowSize}
             />
           ))}
           <SaveWeek createWeek={createWeek} />
