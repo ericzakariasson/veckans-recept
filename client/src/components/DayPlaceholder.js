@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card } from './Recipe'
+import { Card } from './MobileRecipe'
 import { Wrapper } from './Day'
 import { Button } from './RecipeActions'
 

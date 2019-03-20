@@ -11,6 +11,9 @@ import Bar from '../components/Bar'
 import Pagination from '../components/Pagination'
 
 import { WEEK_DAYS as initialDays } from '../constanst'
+import useMedia from 'use-media'
+import { sizes } from '../style'
+import { useMobile } from '../hooks/useMobile'
 
 const Wrapper = styled.div`
   display: flex;
@@ -110,6 +113,8 @@ const App = ({ client }) => {
   useEffect(() => {
     initialFetch()
   }, [])
+
+  const isMobile = useMobile()
 
   const dayArray = daysToArray(days)
   const enabledDays = filterEnabled(days)
@@ -316,19 +321,18 @@ const App = ({ client }) => {
         fetchRecipe={fetchRecipe}
         selected={selected}
         setSelected={setSelected}
-      >
-        <Pagination pages={pages} active={activeIndex} />
-        <Bar
-          setActiveIndex={setActiveIndex}
-          activeIndex={activeIndex}
-          days={dayArray}
-          isSelected={selected !== ''}
-          enabledDays={enabledDays}
-          toggle={toggleEnabled}
-          refetch={refetchNotFrozen}
-          daysToRefetch={enabledAndNotFrozen.length}
-        />
-      </Days>
+      />
+      {isMobile && <Pagination pages={pages} active={activeIndex} />}
+      <Bar
+        setActiveIndex={setActiveIndex}
+        activeIndex={activeIndex}
+        days={dayArray}
+        isSelected={selected !== ''}
+        enabledDays={enabledDays}
+        toggle={toggleEnabled}
+        refetch={refetchNotFrozen}
+        daysToRefetch={enabledAndNotFrozen.length}
+      />
     </Wrapper>
   )
 }

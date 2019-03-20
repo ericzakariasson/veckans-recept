@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMeasure } from '../hooks'
 import styled, { css } from 'styled-components'
-import { useTransition, useSpring, animated, config } from 'react-spring'
+import { useTransition, animated, config } from 'react-spring'
 import PropTypes from 'prop-types'
 
 import { X } from 'react-feather'
@@ -13,11 +13,11 @@ export const Card = styled(animated.div)`
   flex: 1;
   overflow: hidden;
   overflow-y: auto;
-  position: absolute;
   background: #fff;
   border-radius: ${p => (p.maximized ? 0 : '10px')};
   z-index: ${p => (p.maximized ? 11 : 1)};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+  height: 100px;
 
   /* 
 
@@ -53,23 +53,7 @@ const Image = styled.div`
   background-image: url(${p => p.url});
   background-size: cover;
   background-color: #eee;
-  width: 100%;
   flex: 1;
-  max-height: 50vh;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 150%;
-    height: 25%;
-    border-radius: 100%;
-    background: #fff;
-    transform: translate(-50%, -15%);
-  }
-
-  ${p => p.maximized && css``}
 `
 
 const Content = styled.div`
@@ -142,9 +126,7 @@ const Info = styled.li`
   }
 `
 
-const Recipe = ({ frozen, maximize, maximized, i, recipe, windowSize }) => {
-  const isMaximized = maximized ? 'true' : undefined
-
+const Recipe = ({ frozen, recipe, style }) => {
   const transition = useTransition(recipe, recipe.id, {
     from: { opacity: 0, transform: `rotate(-15deg)` },
     enter: { opacity: 1, transform: `rotate(0deg)` },
@@ -154,55 +136,17 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe, windowSize }) => {
     config: config.stiff,
   })
 
-  const top = 114
-  const width = windowSize.width - 60
-  const height = windowSize.height - (70 + 38 + 48 + 15 + top)
-
-  const defaultStyle = {
-    width,
-    height,
-    top,
-  }
-
-  const [style, set] = useSpring(() => ({ ...defaultStyle }))
-
-  if (isMaximized) {
-    set({
-      width: windowSize.width,
-      height: windowSize.height,
-      top: 0,
-    })
-  } else {
-    set({ ...defaultStyle })
-  }
-
-  const [bind, { height: fullScreenHeight }] = useMeasure()
-
-  const fullRecipe = useTransition(maximized, null, {
-    from: { opacity: 0, height: 0, padding: '0 20px' },
-    enter: { opacity: 1, height: fullScreenHeight, padding: '20px 20px' },
-    leave: { opacity: 0, height: 0, padding: '0 20px' },
-  })
-
   return (
-    <Card
-      style={style}
-      maximized={isMaximized}
-      onClick={() => (isMaximized ? undefined : maximize(recipe.id))}
-      frozen={frozen.toString()}
-    >
-      <Minimize minimized={!isMaximized} onClick={() => maximize(recipe.id)}>
-        <X color="#FFF" />
-      </Minimize>
-      hej
-      {transition.map(
+    <Card style={style} frozen={frozen.toString()}>
+      test
+      {/* transition.map(
         ({
           item: { image, title, time, difficulty, numberOfIngredients },
           props,
           key,
         }) => (
           <Inner key={key} style={props}>
-            <Image maximized={isMaximized} url={image} />
+            <Image url={image} />
             <Content>
               <Title>{title}</Title>
               <InfoList>
@@ -211,26 +155,9 @@ const Recipe = ({ frozen, maximize, maximized, i, recipe, windowSize }) => {
                 <Info>{numberOfIngredients} ingredienser</Info>
               </InfoList>
             </Content>
-            {fullRecipe.map(
-              ({
-                item: isFullscreen,
-                props: fullScreenProps,
-                key: fullscreenKey,
-              }) =>
-                isFullscreen && (
-                  <FullRecipe
-                    key={fullscreenKey}
-                    bind={bind}
-                    style={fullScreenProps}
-                    sections={recipe.sections}
-                    description={recipe.description}
-                    instructions={recipe.instructions}
-                  />
-                )
-            )}
           </Inner>
         )
-      )}
+        )*/}
     </Card>
   )
 }

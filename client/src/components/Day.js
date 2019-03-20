@@ -1,11 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
-import Recipe from './Recipe'
-import RecipeActions from './RecipeActions'
-
-import { Label } from './Label'
+export { Label as Name } from './Label'
 
 export const Wrapper = styled.article`
   display: flex;
@@ -15,44 +10,3 @@ export const Wrapper = styled.article`
   height: 100%;
   justify-content: space-between;
 `
-
-const Name = Label
-
-const Day = ({
-  style,
-  day,
-  frozen,
-  recipe,
-  maximize,
-  maximized,
-  i,
-  windowSize,
-}) => {
-  return (
-    <Wrapper style={style}>
-      <Name>{day.name}</Name>
-      <Recipe
-        frozen={recipe.frozen}
-        recipe={recipe}
-        maximize={maximize}
-        maximized={maximized}
-        i={i}
-        windowSize={windowSize}
-      />
-      <RecipeActions
-        frozen={frozen}
-        replace={recipe.replace}
-        freeze={recipe.freeze}
-      />
-    </Wrapper>
-  )
-}
-
-Day.propTypes = {
-  style: PropTypes.object,
-  day: PropTypes.object,
-  frozen: PropTypes.bool,
-  recipe: PropTypes.object,
-}
-
-export default Day
